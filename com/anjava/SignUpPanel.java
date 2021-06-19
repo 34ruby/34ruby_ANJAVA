@@ -24,7 +24,9 @@ public class SignUpPanel extends JPanel{
 					}
 				};
 				pwdFields[i-2].setToolTipText(categories[i]);
-				pwdFields[i-2].setBackground(new Color(255,0,255));
+				pwdFields[i-2].setBackground(new Color(255,255,255));
+				pwdFields[i-2].setForeground(new Color(125, 124, 130));
+				pwdFields[i-2].setFont(new Font("SAN SERIF", Font.PLAIN, 18));
 				this.add(pwdFields[i-2]);
 			}else {
 			fields[i] = new JTextField(15){
@@ -33,12 +35,14 @@ public class SignUpPanel extends JPanel{
 				}
 			};
 			fields[i].setToolTipText(categories[i]);
-			fields[i].setBackground(new Color(255,0,255));
+			fields[i].setBackground(new Color(255,255,255));
+			fields[i].setForeground(new Color(125, 124, 130));
+			fields[i].setFont(new Font("SAN SERIF", Font.PLAIN, 18));
 			this.add(fields[i]);
 			}
 		}
 		
-		this.setBounds(550,70,200,320);
+		this.setBounds(570,70,200,320);
 		this.setBackground(new Color(255,255,255));
 		this.setLayout(new GridLayout(6,0,10,10));
 	}

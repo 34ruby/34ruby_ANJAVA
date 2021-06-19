@@ -115,6 +115,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		ID.setText("test6");
 //		ID.setBackground(Color.gray);
 		ID.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
+		ID.setForeground(new Color( 125, 124, 130));
 		
 
 		 //Password
@@ -123,10 +124,11 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			public void setBorder(Border border) {		
 			}
 		};
-		PASSWORD.setBounds(70,105,250,40);
+		PASSWORD.setBounds(70,108,250,40);
 		PASSWORD.addKeyListener(this);
 		PASSWORD.setText("12341234");
 		PASSWORD.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
+		PASSWORD.setForeground(new Color( 125, 124, 130));
 		
 		// 로그인 창
 		logTypingLabel = new AntialiasedLabel("");
@@ -672,7 +674,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		seatsPanel.setVisible(true);
 		seatsPanel.setBounds(20, -46, 800, 500);
 		
-		remove(roomPanelLabel);
+//		remove(roomPanelLabel);
 		add(seatsPanel);
 //		add(roomPanelLabel);
 //		seatsPanel.setBackground(Color.gray.brighter());
