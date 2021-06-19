@@ -201,7 +201,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		 //SignUp Button
 		signUpBtn = new JButton("회원가입");
-		signUpBtn.setBounds(20, 190, 120, 40);
+		signUpBtn.setBounds(10, 185, 120, 40);
 		signUpBtn.setBackground(Color.white);
 		signUpBtn.setBorderPainted(false); // 버튼 테두리 없애기
 		signUpBtn.addActionListener(this);
@@ -230,7 +230,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				addMainLogIn();
+				
 				deleteLoggedInPanel();
 				hc.clearData();
 				if (seatsPanel != null) deleteSeats();
@@ -238,6 +238,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				welcome.setVisible(false);
 				if(cRoomPanel != null)
 				cRoomPanel.setVisible(false);
+				addMainLogIn();
+				remove(roomPanelLabel);
 				}
 			
 		});
@@ -669,7 +671,10 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		seatsPanel = new SeatsPanel(col, row, colbl, rowbl, roomNum, reservedData, hc);
 		seatsPanel.setVisible(true);
 		seatsPanel.setBounds(20, -46, 800, 500);
+		
+		remove(roomPanelLabel);
 		add(seatsPanel);
+//		add(roomPanelLabel);
 //		seatsPanel.setBackground(Color.gray.brighter());
 		
 		seatsPanel.setVisible(true);
