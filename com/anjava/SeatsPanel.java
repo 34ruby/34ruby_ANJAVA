@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -119,7 +120,11 @@ class SeatsPanel extends JPanel {
 	            	final int jj = j;
 	            	final int ii = i;
 	            	final int iidx = index;
-	            	btn[i*this.row+j]=new MyButton();
+	            	btn[i*this.row+j]=new MyButton(){
+	        			@Override 
+	        			public void setBorder(Border border) {		
+	        			}
+	        		};
 		            btn[i*this.row+j].setPreferredSize(new Dimension(180,180));
 	            	if (IntStream.of(rowblock).anyMatch(x -> x == jj) || IntStream.of(colblock).anyMatch(x -> x == ii)) {
 	            		// 공백일 때
@@ -143,7 +148,7 @@ class SeatsPanel extends JPanel {
 	            			// 빈 자리일 때
 	            			btn[i*this.row+j].setEnabled(true);
 		            		btn[i*this.row+j].setText(String.valueOf(index++));
-			                btn[i*this.row+j].setBackground(Color.BLUE);
+			                btn[i*this.row+j].setBackground(Color.LIGHT_GRAY);
 			                btn[i*this.row+j].setStatus(0);
 	            		}
 	            	}

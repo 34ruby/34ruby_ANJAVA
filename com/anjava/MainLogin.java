@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,14 +24,14 @@ import org.json.JSONObject;
 
 public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	JPanel logInPanel, signUpBtnPanel, imagePanel, signUpMainPanel, cRoomPanel;
-	JLabel mainTitle, subTitle, idLabel, pwdLabel, welcome, reLabel, colLabel, rowLabel, colBlankLabel, rowBlankLabel, roomNumLabel;
+	JLabel mainTitle, subTitle, idLabel, pwdLabel, welcome, reLabel, colLabel, rowLabel, colBlankLabel, rowBlankLabel, roomNumLabel, logTypingLabel, roomPanelLabel;
 	AntialiasedLabel mainLogLabel, signUpPanelLabel;
 	JTextField ID, col, row, roomNum, colBlank, rowBlank;
 	JPasswordField PASSWORD;;
 	JButton logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, resetDate, makeRoomBtn;
 	LoggedInPanel loggedInPanel;
 	FakeDB fake = new FakeDB();
-	Font Title = new Font(null);
+	Font Title, LoginInfo, WhiteButtonText, ColorButtonText = new Font(null);
 	ImageIcon icon;
 	HttpCaller hc = new HttpCaller();
 	JPanel logInLabelPanel = new JPanel();
@@ -73,13 +74,14 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		 //welcome Label
 		welcome = new JLabel();
-		welcome.setBounds(5,-123,300,300);
-		welcome.setFont(new Font(null,Font.CENTER_BASELINE,30));
+		welcome.setBounds(15,-128,300,300);
+		welcome.setFont(new Font("HY견고딕", Font.PLAIN, 20));
+		welcome.setForeground(Color.white);
 		welcome.setVisible(false);
 		
 		 // 메인타이틀
 		mainLogLabel = new AntialiasedLabel("");
-		mainLogLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/mainlogin.jpg")));
+		mainLogLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/mainlogin2.jpg")));
 		mainLogLabel.setBounds(0, 0, 800, 500);
 //		BufferedImage image = new BufferedImage();
 		
@@ -91,36 +93,62 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		
 		//TextField
+		//setBorder 메소드 오버라이딩으로 JTextField의 테두리 삭제
+		//ID
+		ID = new JTextField(15) {
+			@Override 
+			public void setBorder(Border border) {	
+			}
+		};
 		
-		 //ID
-		ID = new JTextField(15);
-		ID.setBounds(64,20,135,20);
+		ID.setBounds(70,40,250,40);
 		ID.addKeyListener(this);
 		ID.setText("test6");
+//		ID.setBackground(Color.gray);
+		ID.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
+		
 
 		 //Password
-		PASSWORD = new JPasswordField(15);
-		PASSWORD.setBounds(64,45,135,20);
+		PASSWORD = new JPasswordField(15){
+			@Override 
+			public void setBorder(Border border) {		
+			}
+		};
+		PASSWORD.setBounds(70,105,250,40);
 		PASSWORD.addKeyListener(this);
 		PASSWORD.setText("12341234");
-
+		PASSWORD.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
+		
+		logTypingLabel = new AntialiasedLabel("");
+		logTypingLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/logTypingLabel.jpg")));
+		logTypingLabel.setBounds(0, 0, 300, 300);
+		
 		
 		//----------------------------------------------------------------------------------------------
 		
 		
 		//Buttons
 		 //LogIn Button
-		logInBtn = new JButton("로그인");
-		logInBtn.setBounds(85, 75, 80, 25);
-		logInBtn.setBackground(Color.LIGHT_GRAY);
+		logInBtn = new JButton();
+		logInBtn.setText("로그인");
+		logInBtn.setBounds(160, 190, 120, 40);
+		logInBtn.setBackground(Color.white);
 		logInBtn.addActionListener(this);
+		logInBtn.setBorderPainted(false);
 		
 		//main Button
 		mainBtn = new JButton("뒤로가기");
 		mainBtn.setBounds(598, 464, 84, 25);
 		
 		//create Room Button
-		cRoom = new JButton("방만들기");
+		cRoom = new JButton("방만들기"){
+			@Override 
+			public void setBorder(Border border) {		
+			}
+		};
+		cRoom.setFont(new Font("HY견고딕", Font.PLAIN, 25));
+		cRoom.setForeground(Color.white);
+		cRoom.setBackground(new Color(135,77,162));
 		cRoom.setBounds(622,58,160,100);
 		cRoom.addActionListener(new ActionListener() {
 			@Override
@@ -130,8 +158,15 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		});
 		
 		//delete Room Button
-		dRoom = new JButton("방지우기");
+		dRoom = new JButton("방지우기"){
+			@Override 
+			public void setBorder(Border border) {		
+			}
+		};
 		dRoom.setBounds(622,204,160,100);
+		dRoom.setFont(new Font("HY견고딕", Font.PLAIN, 25));
+		dRoom.setForeground(Color.white);
+		dRoom.setBackground(new Color(135,77,162));
 		dRoom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,18 +177,31 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
          });
 		
 		//reset Date Button
-		resetDate = new JButton("초기화날짜설정");
+		resetDate = new JButton("초기화설정"){
+			@Override 
+			public void setBorder(Border border) {		
+			}
+		};
+		
 		resetDate.setBounds(622,350,160,100);
+		resetDate.setFont(new Font("HY견고딕", Font.PLAIN, 25));
+		resetDate.setForeground(Color.white);
+		resetDate.setBackground(new Color(135,77,162));
+
 		
 		 //SignUp Button
 		signUpBtn = new JButton("회원가입");
-		signUpBtn.setBounds(80, 110, 90, 25);
-		signUpBtn.setBackground(Color.PINK);
+		signUpBtn.setBounds(20, 190, 120, 40);
+		signUpBtn.setBackground(Color.white);
+		signUpBtn.setBorderPainted(false); // 버튼 테두리 없애기
 		signUpBtn.addActionListener(this);
 		
 		 //Exit Button
-		exitButton = new JButton("");
+		exitButton = new JButton();
+
 		exitButton.setBounds(770, 10, 20, 20);
+		exitButton.setBorderPainted(false);
+		exitButton.setBackground(Color.red);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
@@ -162,6 +210,11 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		 //LogOutButton
 		logOutBtn = new JButton("로그아웃");
+		
+		logOutBtn.setBackground(new Color(135,77,162));
+		logOutBtn.setFont(new Font("HY견고딕", Font.PLAIN, 10));
+		logOutBtn.setForeground(Color.white);
+		logOutBtn.setBorderPainted(false);
 		logOutBtn.setVisible(true);
 		logOutBtn.addActionListener(new ActionListener() {
 			@Override
@@ -195,7 +248,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//Panel Setting
 
 		logInPanel.setLayout(null);
-		logInPanel.setBounds(275, 220, 250, 150);
+		logInPanel.add(logTypingLabel);
+		logInPanel.setBounds(450, 160, 350, 250);
 		logInPanel.setBackground(new Color(255,255,255));
 		logInPanel.add(ID);
 		logInPanel.add(PASSWORD);
@@ -295,7 +349,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			signUpPanelLabel.setBounds(0, 0, 800, 500);
 
 			logInLabelPanel.setLayout(new GridLayout(6,0,10,10));
-			logInLabelPanel.setBounds(200,130,130,200);
+			logInLabelPanel.setBounds(400,130,130,200);
 			logInLabelPanel.setBackground(Color.white);
 			
 			
@@ -304,9 +358,13 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			backBtn = new JButton("뒤로가기");
 			signUpBtnPanel.add(backBtn);
 			signUpBtn2.setBackground(new Color(255,128,0));
+			signUpBtn2.setBorderPainted(false);
+			backBtn.setBorderPainted(false);
+			
 			signUpBtnPanel.add(signUpBtn2);
-			signUpBtnPanel.setBounds(315,350,180,35);
+			signUpBtnPanel.setBounds(515,350,180,35);
 			signUpBtnPanel.setBackground(Color.white);
+			
 			
 			signUpMainPanel = new JPanel();
 			signUpMainPanel.setSize(400,300);
@@ -398,6 +456,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			loggedInPanel.btnPanel.setPreferredSize(new Dimension(600, (50 / 4 + 1) * 100));
 			loggedInPanel.scroll.setPreferredSize(new Dimension(600, 405));
 			loggedInPanel.setBounds(6, 49, 600, 405);
+			
 			add(cRoom);
 			add(dRoom);
 			add(resetDate);
@@ -405,8 +464,14 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		add(welcome);
 		welcome.setVisible(true);
 		loggedInPanel.setVisible(true);
-		welcome.setText("안녕하세요. " + hc.getName() + "님");
+		welcome.setText(hc.getName() + "님 반갑습니다.");
+		
 		add(logOutBtn);
+		roomPanelLabel = new AntialiasedLabel("");
+		roomPanelLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/room.jpg")));
+		roomPanelLabel.setBounds(0, 0, 800, 500);
+		
+		add(roomPanelLabel);
 	}
 	
 	class createRoom extends JFrame implements ActionListener{
@@ -462,6 +527,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		makeRoomBtn = new JButton("방만들기");
 		makeRoomBtn.addActionListener(this);
 		makeRoomBtn.setBounds(190,265,85,25);
+		
 		add(makeRoomBtn);
 //			
 //			cRoomPanel.setBorder(BorderFactory.createLineBorder(Color.black));
