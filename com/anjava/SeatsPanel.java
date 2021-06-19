@@ -166,6 +166,7 @@ class SeatsPanel extends JPanel {
 	             }
 	         }
 	         add(buttonPanel);
+	         
 	         buttonPanel.setBounds(30,100,700,400);
 	         repaint();     
 	   }
@@ -293,9 +294,9 @@ class SeatsPanel extends JPanel {
 	            }
 	         });
 	          
-	          
-	          add(lb);
 	          add(okButton);
+	          add(lb);
+	          
 	          
 	          setVisible(true);
 	         }

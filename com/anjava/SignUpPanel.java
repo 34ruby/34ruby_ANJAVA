@@ -12,7 +12,7 @@ public class SignUpPanel extends JPanel{
 	String[] categories = {"Name", "ID", "Password", "Password Check", "Student ID", "Email"};
 	JTextField[] fields = new JTextField[categories.length];
 	JPasswordField[] pwdFields = new JPasswordField[2];
-	
+
 	public SignUpPanel(){
 
 		for(int i = 0; i < categories.length; i++) {			
@@ -24,6 +24,7 @@ public class SignUpPanel extends JPanel{
 					}
 				};
 				pwdFields[i-2].setToolTipText(categories[i]);
+				pwdFields[i-2].setBackground(new Color(255,0,255));
 				this.add(pwdFields[i-2]);
 			}else {
 			fields[i] = new JTextField(15){
@@ -32,11 +33,13 @@ public class SignUpPanel extends JPanel{
 				}
 			};
 			fields[i].setToolTipText(categories[i]);
+			fields[i].setBackground(new Color(255,0,255));
 			this.add(fields[i]);
 			}
 		}
 		
-		this.setBounds(550,130,200,200);
+		this.setBounds(550,70,200,320);
+		this.setBackground(new Color(255,255,255));
 		this.setLayout(new GridLayout(6,0,10,10));
 	}
 

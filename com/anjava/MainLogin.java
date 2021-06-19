@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,23 +34,32 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	LoggedInPanel loggedInPanel;
 	FakeDB fake = new FakeDB();
 	Font Title, LoginInfo, WhiteButtonText, ColorButtonText = new Font(null);
-	ImageIcon icon;
+	ImageIcon icon, icon1;
 	HttpCaller hc = new HttpCaller();
 	JPanel logInLabelPanel = new JPanel();
 	SignUpPanel signUpPanel = new SignUpPanel();
 	JLabel[] logInLabels = new JLabel[signUpPanel.categories.length];
 	JPanel seatsPanel;
 	JSONArray roomsData;
+	int  xDrag, yDrag, xPress, yPress;
+	
+	private BufferedImage img = null;
 
 
 	public MainLogin(){
 		
 		//Panel
 		 //LogInPanel
-		icon = new ImageIcon();
+//		icon = new ImageIcon();
 		logInPanel = new JPanel();
 		imagePanel = new JPanel();
-		
+//		icon1 = new ImageIcon("/image/mainlogin2.jpg");
+//		JLabel background = new JLabel() {
+//			public void paintComponent(Graphics g) {
+//				g.drawImage(icon1.getImage(),0,0,null);
+//				super.paintComponent(g);
+//			}
+//		};
 		//----------------------------------------------------------------------------------------------
 		
 		
@@ -65,11 +76,11 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		subTitle.setFont(new Font("여기어때 잘난체",Font.BOLD,20));
 		
 		 //ID Label
-		idLabel = new JLabel("ID");
+		idLabel = new JLabel("");
 		idLabel.setBounds(47,20,135,20);
 		
 		 //Password Label
-		pwdLabel = new JLabel("PW");
+		pwdLabel = new JLabel("");
 		pwdLabel.setBounds(38,45,135,20);
 		
 		 //welcome Label
@@ -82,6 +93,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		 // 메인타이틀
 		mainLogLabel = new AntialiasedLabel("");
 		mainLogLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/mainlogin2.jpg")));
+//		mainLogLabel.setIcon()
 		mainLogLabel.setBounds(0, 0, 800, 500);
 //		BufferedImage image = new BufferedImage();
 		
@@ -95,11 +107,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//TextField
 		//setBorder 메소드 오버라이딩으로 JTextField의 테두리 삭제
 		//ID
-		ID = new JTextField(15) {
-			@Override 
-			public void setBorder(Border border) {	
-			}
-		};
+		ID = new JTextField(15);
+		ID.setBorder(null);
 		
 		ID.setBounds(70,40,250,40);
 		ID.addKeyListener(this);
@@ -119,6 +128,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		PASSWORD.setText("12341234");
 		PASSWORD.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
 		
+		// 로그인 창
 		logTypingLabel = new AntialiasedLabel("");
 		logTypingLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/logTypingLabel.jpg")));
 		logTypingLabel.setBounds(0, 0, 300, 300);
@@ -131,8 +141,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		 //LogIn Button
 		logInBtn = new JButton();
 		logInBtn.setText("로그인");
-		logInBtn.setBounds(160, 190, 120, 40);
-		logInBtn.setBackground(Color.white);
+		logInBtn.setBounds(172, 185, 80, 35);
+		logInBtn.setBackground(new Color(135,77,162));
 		logInBtn.addActionListener(this);
 		logInBtn.setBorderPainted(false);
 		
@@ -248,7 +258,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//Panel Setting
 
 		logInPanel.setLayout(null);
-		logInPanel.add(logTypingLabel);
+
 		logInPanel.setBounds(450, 160, 350, 250);
 		logInPanel.setBackground(new Color(255,255,255));
 		logInPanel.add(ID);
@@ -257,7 +267,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		logInPanel.add(pwdLabel);
 		logInPanel.add(logInBtn);
 		logInPanel.add(signUpBtn);
-		
+		logInPanel.add(logTypingLabel);
+
 		
 		
 		//----------------------------------------------------------------------------------------------
@@ -265,14 +276,33 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		//Frame Setting
 		this.setLayout(null);
+
 		this.add(logInPanel);
-		this.add(imagePanel);
+
 		this.add(exitButton);
+		this.add(imagePanel);
 		this.add(mainLogLabel);
 		this.setSize(800,500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 //		this.setResizable(true);
+		this.addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			    xDrag = e.getX();
+			    yDrag = e.getY();
+			    JFrame sFrame = (JFrame) e.getSource();
+			    sFrame.setLocation(sFrame.getLocation().x+xDrag-xPress, 
+			    sFrame.getLocation().y+yDrag-yPress);
+			 }
+			 @Override
+			 public void mouseMoved(MouseEvent e) {
+			     xPress = e.getX();
+			     yPress = e.getY();
+			  }
+			
+		});
 		this.setUndecorated(true);
 		this.setVisible(true);
 	}
@@ -294,10 +324,14 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					addLoggedInPanel();
+					
+					
+					addAdminBtn();	
 					deleteSeats();
-					addAdminBtn();
 					mainBtn.setVisible(false);
+					roomPanelLabel.setVisible(false);
+					addLoggedInPanel();
+					
 				}
 			});
 			mainBtn.setVisible(false);
@@ -342,37 +376,42 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//메인 화면에서 회원가입 버튼 눌렀을 때
 		if(e.getSource()==signUpBtn) {
 			
-			
 			signUpBtnPanel = new JPanel();
 			signUpPanelLabel = new AntialiasedLabel("");
 			signUpPanelLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/signup.jpg")));
 			signUpPanelLabel.setBounds(0, 0, 800, 500);
-
-			logInLabelPanel.setLayout(new GridLayout(6,0,10,10));
-			logInLabelPanel.setBounds(400,130,130,200);
-			logInLabelPanel.setBackground(Color.white);
+			
+//			logInLabelPanel.setLayout(new GridLayout(6,0,10,10));
+//			logInLabelPanel.setBounds(400,130,130,200);
+//			logInLabelPanel.setBackground(Color.white);
 			
 			
 			//회원가입창의 버튼
 			signUpBtn2 = new JButton("회원가입");
 			backBtn = new JButton("뒤로가기");
-			signUpBtnPanel.add(backBtn);
-			signUpBtn2.setBackground(new Color(255,128,0));
+			
+			signUpBtn2.setBackground(new Color(255,150,0));
 			signUpBtn2.setBorderPainted(false);
 			backBtn.setBorderPainted(false);
 			
-			signUpBtnPanel.add(signUpBtn2);
-			signUpBtnPanel.setBounds(515,350,180,35);
+			
+			signUpBtnPanel.setBounds(515,420,180,35);
 			signUpBtnPanel.setBackground(Color.white);
 			
 			
 			signUpMainPanel = new JPanel();
 			signUpMainPanel.setSize(400,300);
 
-			signUpPanel.add(signUpMainPanel);
-			signUpPanel.setBackground(new Color(255, 0, 0, 0));
-			signUpBtnPanel.add(signUpMainPanel);
+			
+			signUpPanel.setBackground(new Color(135,77,162,0));
 			signUpMainPanel.setBounds(350,550,300,200);
+
+			
+			signUpPanel.add(signUpMainPanel);
+			signUpBtnPanel.add(backBtn);
+			signUpBtnPanel.add(signUpBtn2);
+			signUpBtnPanel.add(signUpMainPanel);
+			
 			
 			signUpBtn2.addActionListener(new ActionListener() {
 				@Override
@@ -416,8 +455,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				public void actionPerformed(ActionEvent e) {
 					deleteSignUpPanel();
 					deleteInfo();
+
+//					setLogInTextEmpty();
 					addMainLogIn();
-					setLogInTextEmpty();
 				}
 			});
 			deleteMainLogIn();
@@ -434,12 +474,14 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public void addSignUpPanel() {
-		logInLabelPanel.setVisible(true);
-		signUpPanel.setVisible(true);
+		add(signUpPanel);
 		add(logInLabelPanel);
 		add(signUpBtnPanel);
-		add(signUpPanel);
 		add(signUpPanelLabel);
+		logInLabelPanel.setVisible(true);
+		signUpPanel.setVisible(true);
+
+
 	}
 	
 	public void deleteSignUpPanel() {
@@ -450,27 +492,24 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public void addLoggedInPanel() {
+		add(welcome);
+		welcome.setVisible(true);
+		loggedInPanel.setVisible(true);
+		welcome.setText(hc.getName() + "님 반갑습니다.");
+		add(logOutBtn);
 		add(loggedInPanel);
 		if(hc.isAdmin()) {
 //			add(loggedInPanel.reserve);
 			loggedInPanel.btnPanel.setPreferredSize(new Dimension(600, (50 / 4 + 1) * 100));
 			loggedInPanel.scroll.setPreferredSize(new Dimension(600, 405));
-			loggedInPanel.setBounds(6, 49, 600, 405);
-			
+			loggedInPanel.setBounds(6, 49, 600, 405);	
 			add(cRoom);
 			add(dRoom);
 			add(resetDate);
 		}
-		add(welcome);
-		welcome.setVisible(true);
-		loggedInPanel.setVisible(true);
-		welcome.setText(hc.getName() + "님 반갑습니다.");
-		
-		add(logOutBtn);
 		roomPanelLabel = new AntialiasedLabel("");
 		roomPanelLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/room.jpg")));
 		roomPanelLabel.setBounds(0, 0, 800, 500);
-		
 		add(roomPanelLabel);
 	}
 	
@@ -711,4 +750,6 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	public static void main(String[] args) {
 		new MainLogin();
 	}
+	
+	
 }
