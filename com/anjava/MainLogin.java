@@ -99,10 +99,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		 // ¹öÆ°
 		roomHintLabel = new AntialiasedLabel("");
-		
 		roomHintLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/RoomHintLabel.jpg")));
 		roomHintLabel.setLayout(null);
-		roomHintLabel.setBounds(0,470,330,20);
+		roomHintLabel.setBounds(0,468,330,20);
 
 		
 		
@@ -699,7 +698,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		selectHintLabel = new AntialiasedLabel("");
 		selectHintLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/SelectHintLabel.jpg")));
 		selectHintLabel.setLayout(null);
-		selectHintLabel.setBounds(0,470,350,20);
+		selectHintLabel.setBounds(0,468,350,22);
 		add(selectHintLabel);
 		remove(roomHintLabel);
 		remove(roomPanelLabel);

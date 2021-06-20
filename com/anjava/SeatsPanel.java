@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -83,7 +84,6 @@ class SeatsPanel extends JPanel {
 
 	   public SeatsPanel(int col, int row, int[] colbl, int[] rowbl, int roomNum, int[] otherReservedSeats, HttpCaller hc) {
 //	      this.setLayout(null);
-		  this.setBackground(new Color(255,255,0));
 	      this.hc = hc;
 		  this.roomNum = roomNum;
 	      this.setLayout(null);
@@ -177,6 +177,7 @@ class SeatsPanel extends JPanel {
 	   //-----------------------------------------------------------------------
 	   //예약하시겠습니까?
 	   class yeyakok extends JFrame implements ActionListener {
+//		  JPanel popPanel;
 	      JLabel topLabel;
 	      JButton yesbtn;
 	      JButton noBtn;
@@ -187,51 +188,132 @@ class SeatsPanel extends JPanel {
 	    	  this.index = index;
 	    	  this.roomNum = roomNum;
 	    	  this.number = number;
-	    	  setSize(300,300);
+	    	  this.setLayout(null);
+	    	  
+	    	  setSize(300,120);
 	          setLocationRelativeTo(null);
 	          topLabel = new JLabel();
 	          
 	          if (btn[index].getStatus() == 0) {
-	        	  setLayout(new BorderLayout());
+	        	  
 	        	  if (myReservedSeat > 0) {
 	        		  topLabel.setText("이미 이 방에 예약한 자리가 있습니다.");
-	        		  add(topLabel,BorderLayout.CENTER);
-	        		  setSize(250, 100);
+	        		  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	        		  topLabel.setBounds(45,20,210,40);
+			          noBtn = new JButton("돌아가기");
+			          noBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			          noBtn.setForeground(Color.BLACK);
+			          noBtn.setBackground(Color.LIGHT_GRAY);
+			          noBtn.addActionListener(this);
+			          noBtn.setBorderPainted(false);
+			          noBtn.setBounds(100,70,100,20);
+			          this.add(topLabel);
+			          this.add(noBtn);
+			          this.setUndecorated(true);
 	        	  } else {
 	        		  topLabel.setText(number+" 번 좌석을 예약하시겠습니까?");
+	        		  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+		        	  
 			          yesbtn = new JButton("네");
+			          yesbtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			          yesbtn.setForeground(Color.white);
+			          yesbtn.setBackground(new Color(135,77,162));
 			          yesbtn.addActionListener(this);
+			          yesbtn.setBorderPainted(false);
+			          
 			          noBtn = new JButton("아니오");
+			          noBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			          noBtn.setForeground(Color.BLACK);
+			          noBtn.setBackground(Color.LIGHT_GRAY);
 			          noBtn.addActionListener(this);
-			          add(topLabel,BorderLayout.NORTH);
-			          add(yesbtn,BorderLayout.WEST);
-			          add(noBtn,BorderLayout.EAST);
+			          noBtn.setBorderPainted(false);
+			          
+			          topLabel.setBounds(60,30,200,20);
+			          yesbtn.setBounds(20,70,80,20);
+			          noBtn.setBounds(200,70,80,20);
+			          this.add(topLabel);
+			          this.add(yesbtn);
+			          this.add(noBtn);
+			          this.setUndecorated(true);
 	        	  }
 	          } else if (btn[index].getStatus() == 1) {
 	        	  topLabel.setText(number+" 번 좌석을 예약 취소하시겠습니까?");
+	        	  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	        	  
 		          yesbtn = new JButton("네");
+		          yesbtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+		          yesbtn.setForeground(Color.white);
+		          yesbtn.setBackground(new Color(135,77,162));
 		          yesbtn.addActionListener(this);
+		          yesbtn.setBorderPainted(false);
+		          
 		          noBtn = new JButton("아니오");
+		          noBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+		          noBtn.setForeground(Color.BLACK);
+		          noBtn.setBackground(Color.LIGHT_GRAY);
 		          noBtn.addActionListener(this);
-		          add(topLabel,BorderLayout.NORTH);
-		          add(yesbtn,BorderLayout.WEST);
-		          add(noBtn,BorderLayout.EAST);
+		          noBtn.setBorderPainted(false);
+		          
+		          topLabel.setBounds(50,30,200,20);
+		          yesbtn.setBounds(20,70,80,20);
+		          noBtn.setBounds(200,70,80,20);
+		          this.add(topLabel);
+		          this.add(yesbtn);
+		          this.add(noBtn);
+		          this.setUndecorated(true);
 	          } else {
 	        	  if (isAdmin) {
 	        		  topLabel.setText(number+" 번 좌석을 예약 취소하시겠습니까?");
+		        	  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 10));
+		        	  
 			          yesbtn = new JButton("네");
+			          yesbtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			          yesbtn.setForeground(Color.white);
+			          yesbtn.setBackground(new Color(135,77,162));
 			          yesbtn.addActionListener(this);
+			          yesbtn.setBorderPainted(false);
+			          
 			          noBtn = new JButton("아니오");
+			          noBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			          noBtn.setForeground(Color.BLACK);
+			          noBtn.setBackground(Color.LIGHT_GRAY);
 			          noBtn.addActionListener(this);
-			          add(topLabel,BorderLayout.NORTH);
-			          add(yesbtn,BorderLayout.WEST);
-			          add(noBtn,BorderLayout.EAST);
+			          noBtn.setBorderPainted(false);
+			          
+			          topLabel.setBounds(50,30,200,20);
+			          yesbtn.setBounds(20,70,80,20);
+			          noBtn.setBounds(200,70,80,20);
+			          this.add(topLabel);
+			          this.add(yesbtn);
+			          this.add(noBtn);
+			          this.setUndecorated(true);
+//			          yesbtn = new JButton("네");
+//			          yesbtn.addActionListener(this);
+//			          noBtn = new JButton("아니오");
+//			          noBtn.addActionListener(this);
+//			          add(topLabel,BorderLayout.NORTH);
+//			          add(yesbtn,BorderLayout.WEST);
+//			          add(noBtn,BorderLayout.EAST);
 	        	  } else {
-	        		  topLabel.setText("이미 예약된 자리입니다.");
-			          add(topLabel,BorderLayout.CENTER);
-	        		  setSize(250, 100);
+	        		  topLabel.setText("이미 이 방에 예약한 자리가 있습니다.");
+	        		  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 10));
+	        		  topLabel.setBounds(45,20,210,40);
+			          noBtn = new JButton("돌아가기");
+			          noBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			          noBtn.setForeground(Color.BLACK);
+			          noBtn.setBackground(Color.LIGHT_GRAY);
+			          noBtn.addActionListener(this);
+			          noBtn.setBorderPainted(false);
+			          noBtn.setBounds(100,70,100,20);
+			          this.add(topLabel);
+			          this.add(noBtn);
+			          this.setUndecorated(true);
+//	        		  topLabel.setText("이미 예약된 자리입니다.");
+//			          add(topLabel,BorderLayout.CENTER);
+//	        		  setSize(250, 100);
 	        	  }
 	          }
+	          this.setBackground(Color.white);
 	          setVisible(true);
 	         
 	          
@@ -260,6 +342,7 @@ class SeatsPanel extends JPanel {
 				          hc.deleteReserveRoom(this.roomNum, this.number);
 				          btn[index].setStatus(0);
 				          new ok("예약이 취소되었습니다.");
+				          
 	    			  }
 	    		  }
 	    		  
@@ -279,13 +362,22 @@ class SeatsPanel extends JPanel {
 	         JLabel lb;
 	         JButton okButton;
 	         public ok(String message) {
-	          setSize(300,300);
+	          setSize(300,120);
+//	          this.setBounds(100,100,30,30);
 //	          this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	          this.setLocationRelativeTo(null);
 	          
-	          setLayout(new FlowLayout());
+	          setLayout(null);
 	          lb=new JLabel(message);
-	          okButton=new JButton("OK");
+	          lb.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	          lb.setBounds(85,20,130,20);
+//	          lb.setHorizontalAlignment(JLabel.CENTER);
+	          okButton=new JButton("확인");
+	          okButton.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	          okButton.setForeground(Color.BLACK);
+	          okButton.setBackground(Color.LIGHT_GRAY);
+	          okButton.setBorderPainted(false);
+	          okButton.setBounds(100,85,100,20);
 	          okButton.addActionListener(new ActionListener() {
 	            
 	            @Override
@@ -297,7 +389,7 @@ class SeatsPanel extends JPanel {
 	          
 	          add(okButton);
 	          add(lb);
-	          
+	          setUndecorated(true);
 	          
 	          setVisible(true);
 	         }
