@@ -1,22 +1,29 @@
 package com.anjava;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
+
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,24 +33,21 @@ import org.json.JSONObject;
 
 public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	JPanel logInPanel, signUpBtnPanel, imagePanel, signUpMainPanel, cRoomPanel;
-	JLabel mainTitle, subTitle, idLabel, pwdLabel, welcome, reLabel, colLabel, rowLabel, colBlankLabel, rowBlankLabel, roomNumLabel, logTypingLabel, roomPanelLabel,  selectHintLabel;
-	AntialiasedLabel mainLogLabel, signUpPanelLabel, roomHintLabel;
-	JTextField ID, col, row, roomNum, colBlank, rowBlank;
+	JLabel mainTitle, subTitle, idLabel, pwdLabel, welcome, reLabel, colLabel, rowLabel, colBlankLabel, rowBlankLabel, roomNumLabel, logTypingLabel, roomPanelLabel, roomHintLabel, selectHintLabel;
+	AntialiasedLabel mainLogLabel, signUpPanelLabel;
+	JTextField ID, col, row, roomNum, colBlank, rowBlank, deleteNum, roomNumField, colField, rowField, colBlankField, rowBlankField;
 	JPasswordField PASSWORD;;
-	JButton logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, resetDate, makeRoomBtn;
+	JButton aBtn, logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, makeRoomBtn, dBtn,editBtn, refresh ,sprefresh;
 	LoggedInPanel loggedInPanel;
-	FakeDB fake = new FakeDB();
-	Font Title, LoginInfo, WhiteButtonText, ColorButtonText = new Font(null);
-	ImageIcon icon, icon1;
+	Font Title = new Font(null);
+	ImageIcon icon;
 	HttpCaller hc = new HttpCaller();
 	JPanel logInLabelPanel = new JPanel();
 	SignUpPanel signUpPanel = new SignUpPanel();
 	JLabel[] logInLabels = new JLabel[signUpPanel.categories.length];
 	JPanel seatsPanel;
 	JSONArray roomsData;
-	int  xDrag, yDrag, xPress, yPress;
-	
-	private BufferedImage img = null;
+	int currentRoomNumber, xDrag, yDrag, xPress, yPress;
 
 
 	public MainLogin(){
@@ -53,27 +57,21 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 //		icon = new ImageIcon();
 		logInPanel = new JPanel();
 		imagePanel = new JPanel();
-//		icon1 = new ImageIcon("/image/mainlogin2.jpg");
-//		JLabel background = new JLabel() {
-//			public void paintComponent(Graphics g) {
-//				g.drawImage(icon1.getImage(),0,0,null);
-//				super.paintComponent(g);
-//			}
-//		};
+		
 		//----------------------------------------------------------------------------------------------
 		
 		
 		//Label
 		
 		 //Main Title Label
-		mainTitle = new JLabel("¿µÁø 2WDJ ÁÂ¼® ¿¹¾à");
+		mainTitle = new JLabel("ì˜ì§„ 2WDJ ì¢Œì„ ì˜ˆì•½");
 		mainTitle.setBounds(155,-160,500,500);
-		mainTitle.setFont(new Font("¿©±â¾î¶§ Àß³­Ã¼",Font.CENTER_BASELINE,45));
+		mainTitle.setFont(new Font("ì—¬ê¸°ì–´ë•Œ ì˜ë‚œì²´",Font.CENTER_BASELINE,45));
 		
 		 //Sub Title Label
 		subTitle = new JLabel("Anjava");
 		subTitle.setBounds(365,-110,500,500);
-		subTitle.setFont(new Font("¿©±â¾î¶§ Àß³­Ã¼",Font.BOLD,20));
+		subTitle.setFont(new Font("ì—¬ê¸°ì–´ë•Œ ì˜ë‚œì²´",Font.BOLD,20));
 		
 		 //ID Label
 		idLabel = new JLabel("");
@@ -85,60 +83,51 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		 //welcome Label
 		welcome = new JLabel();
-		welcome.setBounds(15,-128,300,300);
-		welcome.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 20));
+		welcome.setBounds(10,-130,300,300);
+		welcome.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 20));
 		welcome.setForeground(Color.white);
 		welcome.setVisible(false);
 		
-		 // ¸ŞÀÎÅ¸ÀÌÆ²
+		 // ë©”ì¸íƒ€ì´í‹€
 		mainLogLabel = new AntialiasedLabel("");
 		mainLogLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/mainlogin2.jpg")));
-//		mainLogLabel.setIcon()
 		mainLogLabel.setBounds(0, 0, 800, 500);
 //		BufferedImage image = new BufferedImage();
 		
-		 // ¹öÆ°
-		roomHintLabel = new AntialiasedLabel("");
-		roomHintLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/RoomHintLabel.jpg")));
-		roomHintLabel.setLayout(null);
-		roomHintLabel.setBounds(0,468,330,20);
+		 // íšŒì›ê°€ì…
 
-		
+		 roomHintLabel = new AntialiasedLabel("");
+	      roomHintLabel.setIcon(new ImageIcon
+	            (MainLogin.class.getResource("/image/RoomHintLabel.jpg")));
+	      roomHintLabel.setLayout(null);
+	      roomHintLabel.setBounds(0,469,330,22);
 		
 		//----------------------------------------------------------------------------------------------
 		
 		
 		//TextField
-		//setBorder ¸Ş¼Òµå ¿À¹ö¶óÀÌµùÀ¸·Î JTextFieldÀÇ Å×µÎ¸® »èÁ¦
-		//ID
+		
+		 //ID
 		ID = new JTextField(15);
 		ID.setBorder(null);
-		
 		ID.setBounds(70,40,250,40);
 		ID.addKeyListener(this);
 		ID.setText("test6");
-//		ID.setBackground(Color.gray);
 		ID.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
-		ID.setForeground(new Color( 125, 124, 130));
-		
+		ID.setForeground(new Color(125,124,130));
 
 		 //Password
-		PASSWORD = new JPasswordField(15){
-			@Override 
-			public void setBorder(Border border) {		
-			}
-		};
+		PASSWORD = new JPasswordField(15);
+		PASSWORD.setBorder(null);
 		PASSWORD.setBounds(70,108,250,40);
 		PASSWORD.addKeyListener(this);
 		PASSWORD.setText("12341234");
 		PASSWORD.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
-		PASSWORD.setForeground(new Color( 125, 124, 130));
+		PASSWORD.setForeground(new Color(125,124,130));
 		
-		// ·Î±×ÀÎ Ã¢
 		logTypingLabel = new AntialiasedLabel("");
 		logTypingLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/logTypingLabel.jpg")));
 		logTypingLabel.setBounds(0, 0, 300, 300);
-		
 		
 		//----------------------------------------------------------------------------------------------
 		
@@ -146,99 +135,162 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//Buttons
 		 //LogIn Button
 		logInBtn = new JButton();
-		logInBtn.setText("·Î±×ÀÎ");
+		logInBtn.setText("ë¡œê·¸ì¸");
 		logInBtn.setBounds(160, 185, 100, 35);
 		logInBtn.setBackground(new Color(135,77,162));
-		logInBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 14));
 		logInBtn.setForeground(Color.white);
+		logInBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 14));
 		logInBtn.addActionListener(this);
 		logInBtn.setBorderPainted(false);
 		
 		//main Button
-		mainBtn = new JButton("µÚ·Î°¡±â");
-		mainBtn.setBounds(598, 464, 84, 25);
+		mainBtn = new JButton("");
+		mainBtn.setText("ë’¤ë¡œê°€ê¸°");
+		mainBtn.setBounds(600, 468, 84, 25);
+		mainBtn.setBackground(new Color(135,77,162));
+		mainBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+		mainBtn.setForeground(Color.white);
+		mainBtn.setBorderPainted(false);
+		
+		
+		
+		mainBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				editBtn.setVisible(false);
+				sprefresh.setVisible(false);
+				refresh.setVisible(true);
+				deleteSeats();
+				addAdminBtn();
+				add(roomHintLabel);
+				
+				mainBtn.setVisible(false);
+				roomPanelLabel.setVisible(false);
+				currentRoomNumber=0;
+				refreshLoggedInPanel();
+				remove(selectHintLabel);
+			}
+		});
+		
 		
 		//create Room Button
-		cRoom = new JButton("¹æ¸¸µé±â"){
-			@Override 
-			public void setBorder(Border border) {		
-			}
-		};
-		cRoom.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 25));
-		cRoom.setForeground(Color.white);
-		cRoom.setBackground(new Color(135,77,162));
-		cRoom.setBounds(622,58,160,100);
+		cRoom = new JButton("ë°©ë§Œë“¤ê¸°");
+		cRoom.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+		cRoom.setForeground(new Color(135,77,162));
+		cRoom.setBackground(Color.white);
+		cRoom.setBounds(505,7,90,25);
+		cRoom.setBorderPainted(false);
 		cRoom.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new createRoom();
+				
+				new CreateRoom();
 			}			
 		});
 		
 		//delete Room Button
-		dRoom = new JButton("¹æÁö¿ì±â"){
-			@Override 
-			public void setBorder(Border border) {		
-			}
-		};
-		dRoom.setBounds(622,204,160,100);
-		dRoom.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 25));
-		dRoom.setForeground(Color.white);
-		dRoom.setBackground(new Color(135,77,162));
+		dRoom = new JButton("ë°©ì§€ìš°ê¸°");
+		dRoom.setBorderPainted(false);
+		dRoom.setBounds(620,7,90,25);
+		dRoom.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+		dRoom.setForeground(new Color(135,77,162));
+		dRoom.setBackground(Color.white);
 		dRoom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               // TODO Auto-generated method stub
-               String input = JOptionPane.showInputDialog("Áö¿ï ¹æÀÇ È£¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
-               hc.deleteRoom(Integer.valueOf(input));
+               new DeleteRoom();
             }
          });
 		
-		//reset Date Button
-		resetDate = new JButton("ÃÊ±âÈ­¼³Á¤"){
-			@Override 
-			public void setBorder(Border border) {		
-			}
-		};
-		
-		resetDate.setBounds(622,350,160,100);
-		resetDate.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 25));
-		resetDate.setForeground(Color.white);
-		resetDate.setBackground(new Color(135,77,162));
+		//admin button
+		aBtn = new JButton("ê´€ë¦¬ì ê¶Œí•œ ë¶€ì—¬");
+		aBtn.setBorderPainted(false);
+		aBtn.setBounds(350,7,130,25);
+		aBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+		aBtn.setForeground(new Color(135,77,162));
+		aBtn.setBackground(Color.white);
+		aBtn.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new GrantAdmin();
+			}
+			
+		});
 		
 		 //SignUp Button
-		signUpBtn = new JButton("È¸¿ø°¡ÀÔ");
+		signUpBtn = new JButton("íšŒì›ê°€ì…");
 		signUpBtn.setBounds(50, 185, 100, 35);
 		signUpBtn.setBackground(Color.LIGHT_GRAY);
-		signUpBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 14));
-		signUpBtn.setBorderPainted(false); // ¹öÆ° Å×µÎ¸® ¾ø¾Ö±â
+		signUpBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 14));
+		signUpBtn.setBorderPainted(false); // ë²„íŠ¼ í…Œë‘ë¦¬ ì—†ì• ê¸°
 		signUpBtn.addActionListener(this);
 		
 		 //Exit Button
-		exitButton = new JButton();
-
+		exitButton = new JButton("");
 		exitButton.setBounds(770, 10, 20, 20);
+		exitButton.setBackground(new Color(255,130,130));
 		exitButton.setBorderPainted(false);
-		exitButton.setBackground(Color.red);
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 		
+		//refresh button
+	      refresh = new JButton("ìƒˆë¡œê³ ì¹¨");
+	      refresh.setBounds(500, 468, 84, 25);
+	      refresh.setForeground(Color.white);
+	      refresh.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+	      refresh.setBackground(new Color(135,77,162));
+	      refresh.setBorderPainted(false); // ë²„íŠ¼ í…Œë‘ë¦¬ ì—†ì• ê¸°
+	      refresh.addActionListener(new ActionListener() {
+
+	         @Override
+	         public void actionPerformed(ActionEvent e) {
+	        	 loggedInPanel.setVisible(false);
+	        	 refreshLoggedInPanel();
+	         }
+	         
+	      });
+	      refresh.setVisible(false);
+	      add(refresh);
+	      
+	      
+	      
+	      
+	      //sprefresh button
+	      
+	      sprefresh=new JButton("ìƒˆë¡œê³ ì¹¨");
+	      sprefresh.setBounds(500,468,84,25);
+	      sprefresh.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+	      sprefresh.setForeground(Color.white);
+	      sprefresh.setBackground(new Color(135,77,162));
+	      
+	      sprefresh.setBorderPainted(false); // ë²„íŠ¼ í…Œë‘ë¦¬ ì—†ì• ê¸°
+	      sprefresh.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				seatsPanel.setVisible(false);
+				addSeats(currentRoomNumber);
+			}
+	    	  
+	      });
+	      
+	      sprefresh.setVisible(false);
+	      add(sprefresh);
 		 //LogOutButton
-		logOutBtn = new JButton("·Î±×¾Æ¿ô");
-		
-		logOutBtn.setBackground(new Color(135,77,162));
-		logOutBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 10));
-		logOutBtn.setForeground(Color.white);
+		logOutBtn = new JButton("ë¡œê·¸ì•„ì›ƒ");
 		logOutBtn.setBorderPainted(false);
+		logOutBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+		logOutBtn.setForeground(Color.white);
+		logOutBtn.setBackground(new Color(135,77,162));
 		logOutBtn.setVisible(true);
 		logOutBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				
 				deleteLoggedInPanel();
 				hc.clearData();
@@ -247,15 +299,17 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				welcome.setVisible(false);
 				if(cRoomPanel != null)
 				cRoomPanel.setVisible(false);
+				refresh.setVisible(false);
 				addMainLogIn();
 				remove(roomPanelLabel);
-				}
+				
+			}
 			
 		});
-		logOutBtn.setBounds(699, 464, 84, 25);
+		logOutBtn.setBounds(699, 468, 84, 25);
 		
 		
-		//È¸¿ø°¡ÀÔ Ã¢ ÀÔ·ÂÇ×¸ñ ¼³Á¤
+		//íšŒì›ê°€ì… ì°½ ì…ë ¥í•­ëª© ì„¤ì •
 		for(int i = 0; i < signUpPanel.categories.length; i++) {
 			logInLabels[i] = new JLabel(signUpPanel.categories[i]);
 			logInLabels[i].setHorizontalAlignment(JLabel.RIGHT);
@@ -269,8 +323,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//Panel Setting
 
 		logInPanel.setLayout(null);
-
-		logInPanel.setBounds(450, 160, 350, 250);
+		logInPanel.setBounds(450,160,350,250);
 		logInPanel.setBackground(new Color(255,255,255));
 		logInPanel.add(ID);
 		logInPanel.add(PASSWORD);
@@ -279,7 +332,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		logInPanel.add(logInBtn);
 		logInPanel.add(signUpBtn);
 		logInPanel.add(logTypingLabel);
-
+		
 		
 		
 		//----------------------------------------------------------------------------------------------
@@ -287,9 +340,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		//Frame Setting
 		this.setLayout(null);
-
 		this.add(logInPanel);
-
 		this.add(exitButton);
 		this.add(imagePanel);
 		this.add(mainLogLabel);
@@ -318,125 +369,117 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		this.setVisible(true);
 	}
 
-	
+	public void refreshLoggedInPanel() {
+		roomsData = new JSONObject(hc.getAllRoom()).getJSONObject("data").getJSONArray("roomsData");
+	    roomsData = sortJsonArray(roomsData, "roomNum");
+		loggedInPanel = new LoggedInPanel(roomsData);
+		
+		addActionListenerToButtons();
+		
+		mainBtn.setVisible(false);
+		roomPanelLabel.setVisible(false);
+		addLoggedInPanel();
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		imagePanel.setVisible(true);
 		
-		//·Î±×ÀÎ ¹öÆ° ´­·¶À» ¶§
+		//ë¡œê·¸ì¸ ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 		if(e.getSource()==logInBtn) {
 			hc.postLogIn(ID.getText(), PASSWORD.getPassword());
 			add(mainBtn);
 			addAdminBtn();
-;
 			
-			//·Î±×ÀÎ µÈ Ã¢¿¡¼­ µÚ·Î°¡±â ´­·¶À» ¶§
-			mainBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
-					
-					addAdminBtn();	
-					deleteSeats();
-					add(roomHintLabel);
-					mainBtn.setVisible(false);
-					roomPanelLabel.setVisible(false);
-					addLoggedInPanel();
-					remove(selectHintLabel);
-					
-				}
-				
-			});
+			//ë¡œê·¸ì¸ ëœ ì°½ì—ì„œ ë’¤ë¡œê°€ê¸° ëˆŒë €ì„ ë•Œ
+			editBtn = new JButton("ë°©ì„¤ì •ë³€ê²½");
+	        editBtn.setBounds(630, 7, 105, 25);
+	        editBtn.setBorderPainted(false);
+			editBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+			editBtn.setForeground(new Color(135,77,162));
+			editBtn.setBackground(Color.white);
+	        add(editBtn);
+	        editBtn.setVisible(false);
+	        editBtn.addActionListener(new ActionListener() {
+	        	
+	        	@Override
+        		public void actionPerformed(ActionEvent e) {
+        			JSONObject roomData = new JSONObject(hc.getOneRoom(currentRoomNumber)).getJSONObject("data").getJSONObject("roomData");
+        			new UpdateRoom(currentRoomNumber, roomData);
+        			
+        		}
+	        });
+	        
+	        
 			mainBtn.setVisible(false);
-			//·Î±×ÀÎ Á¤º¸°¡ ÀÏÄ¡ÇÒ ¶§
-			if(hc.isLoggedIn()) {		
+			//ë¡œê·¸ì¸ ì •ë³´ê°€ ì¼ì¹˜í•  ë•Œ
+			if(hc.isLoggedIn()) {
 				roomsData = new JSONObject(hc.getAllRoom()).getJSONObject("data").getJSONArray("roomsData");
 			    roomsData = sortJsonArray(roomsData, "roomNum");
 				loggedInPanel = new LoggedInPanel(roomsData);
-				addLoggedInPanel();
+				refresh.setVisible(true);
+				sprefresh.setVisible(false);
+				
 				deleteMainLogIn();
 				setLogInTextEmpty();
-				//·Î±×ÀÎ ÇßÀ» ¶§ »ı±â´Â Buttons
+				addLoggedInPanel();
+
+				//ë¡œê·¸ì¸ í–ˆì„ ë•Œ ìƒê¸°ëŠ” Buttons
 				
-				for(int i = 0; i < loggedInPanel.boxCount; i++) {
-					int roomNum = roomsData.getJSONObject(i).getInt("roomNum");
-					loggedInPanel.reserveBtn[i].addActionListener(new ActionListener() {
-//											//¿¹¾à¹öÆ° ´­·¶À» ¶§
-//											@Override
-											public void actionPerformed(ActionEvent e) {
-//												remove(loggedInPanel);
-//												deleteLoggedInPanel();
-												loggedInPanel.setVisible(false);
-												addSeats(roomNum);
-												deleteAdminBtn();
-												
-//												deleteReserveBtn();
-												loggedInPanel.reserve.setVisible(false);
-												mainBtn.setVisible(true);
-												}
-											});
-////					loggedInPanel.scroll.add(loggedInPanel.reserveBtn[i]);
-//					loggedInPanel.add(loggedInPanel.reserveBtn[i]);
-				}
+				addActionListenerToButtons();
 				
-				//·Î±×ÀÎ Á¤º¸°¡ ºÒÀÏÄ¡ÇÒ ¶§
+				//ë¡œê·¸ì¸ ì •ë³´ê°€ ë¶ˆì¼ì¹˜í•  ë•Œ
 			}else {
-				JOptionPane.showInternalMessageDialog(null, "È¸¿øÁ¤º¸°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.", "Á¤º¸ ºÒÀÏÄ¡",0 );
+				JOptionPane.showInternalMessageDialog(null, "íšŒì›ì •ë³´ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", "ì •ë³´ ë¶ˆì¼ì¹˜",0 );
 			}
 		}
+
 		
-		//¸ŞÀÎ È­¸é¿¡¼­ È¸¿ø°¡ÀÔ ¹öÆ° ´­·¶À» ¶§
+		//ë©”ì¸ í™”ë©´ì—ì„œ íšŒì›ê°€ì… ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 		if(e.getSource()==signUpBtn) {
+			
 			
 			signUpBtnPanel = new JPanel();
 			signUpPanelLabel = new AntialiasedLabel("");
 			signUpPanelLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/signup.jpg")));
 			signUpPanelLabel.setBounds(0, 0, 800, 500);
-			
+
 //			logInLabelPanel.setLayout(new GridLayout(6,0,10,10));
-//			logInLabelPanel.setBounds(400,130,130,200);
+//			logInLabelPanel.setBounds(200,130,130,200);
 //			logInLabelPanel.setBackground(Color.white);
 			
-//			logInBtn.setBounds(160, 185, 100, 35);
-//			logInBtn.setBackground(new Color(135,77,162));
-//			logInBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 14));
-			//È¸¿ø°¡ÀÔÃ¢ÀÇ ¹öÆ°
-			signUpBtn2 = new JButton("È¸¿ø°¡ÀÔ");
-			backBtn = new JButton("µÚ·Î°¡±â");
-			backBtn.setBackground(Color.LIGHT_GRAY);
-			backBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
-			signUpBtn2.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
-			signUpBtn2.setBackground(new Color(135,77,162));
-			signUpBtn2.setForeground(Color.white);
+			
+			//íšŒì›ê°€ì…ì°½ì˜ ë²„íŠ¼
+			signUpBtn2 = new JButton("íšŒì›ê°€ì…");
+			backBtn = new JButton("ë’¤ë¡œê°€ê¸°");
+			
+			signUpBtn2.setBackground(Color.gray);
 			signUpBtn2.setBorderPainted(false);
 			backBtn.setBorderPainted(false);
-			
 			
 			signUpBtnPanel.setBounds(515,420,180,35);
 			signUpBtnPanel.setBackground(Color.white);
 			
-			
 			signUpMainPanel = new JPanel();
-			signUpMainPanel.setSize(400,300);
-
+			signUpMainPanel.setSize(400,300);		
 			
-			signUpPanel.setBackground(new Color(135,77,162,0));
+			signUpPanel.setBackground(new Color(255,255,255,0));
 			signUpMainPanel.setBounds(350,550,300,200);
 
+
 			
-			signUpPanel.add(signUpMainPanel);
+			signUpPanel.add(signUpMainPanel);		
 			signUpBtnPanel.add(backBtn);
 			signUpBtnPanel.add(signUpBtn2);
 			signUpBtnPanel.add(signUpMainPanel);
-			
+
 			
 			signUpBtn2.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					//È¸¿ø°¡ÀÔ Ã¢¿¡¼­ È¸¿ø°¡ÀÔ ¹öÆ° ´­·¶À» ¶§
+					//íšŒì›ê°€ì… ì°½ì—ì„œ íšŒì›ê°€ì… ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 					int yjuNum;
 		               if (signUpPanel.fields[4].getText().equals("")) {
 		                  yjuNum = 0;
@@ -449,34 +492,36 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		                        signUpPanel.fields[0].getText(), 
 		                        yjuNum, 
 		                        signUpPanel.fields[5].getText());
-					System.out.println(res);
-					JSONObject jo = new JSONObject(res);
-					if (!signUpPanel.pwdFields[0].getPassword().equals(signUpPanel.pwdFields[1].getPassword())) {
-						JOptionPane.showInternalMessageDialog(null, "ºñ¹Ğ¹øÈ£°¡ µ¿ÀÏÇÏÁö ¾Ê½À´Ï´Ù.", "Error",1);
+		               			JSONObject jo = new JSONObject(res);
+		               			
+					if (!Arrays.equals(signUpPanel.pwdFields[0].getPassword(), signUpPanel.pwdFields[1].getPassword())) {
+						JOptionPane.showInternalMessageDialog(null, "ë¹„ë°€ë²ˆí˜¸ê°€ ë™ì¼í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", "Error",1);
+						return;
 					}
 					else if (jo.isNull("status")) {
-						JOptionPane.showInternalMessageDialog(null, "È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.\n ´Ù½Ã ·Î±×ÀÎ ÇØÁÖ½Ê½Ã¿À.","È¸¿ø°¡ÀÔ ¿Ï·á",1);
+						JOptionPane.showInternalMessageDialog(null, "íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n ë‹¤ì‹œ ë¡œê·¸ì¸ í•´ì£¼ì‹­ì‹œì˜¤.","íšŒì›ê°€ì… ì™„ë£Œ",1);
 						for(int i = 0; i < signUpPanel.categories.length; i++) {
 							logInLabels[i].setVisible(false);
 						}
 						deleteSignUpPanel();
 						deleteInfo();
 						addMainLogIn();
+						return;
 					} else {
 						JOptionPane.showInternalMessageDialog(null, jo.getString("message"), "Error",1);
+						return;
 					}
 				}				
 			});
 			
-			//µÚ·Î°¡±â ¹öÆ°
+			//ë’¤ë¡œê°€ê¸° ë²„íŠ¼
 			backBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					deleteSignUpPanel();
 					deleteInfo();
-
-//					setLogInTextEmpty();
 					addMainLogIn();
+//					setLogInTextEmpty();
 				}
 			});
 			deleteMainLogIn();
@@ -485,6 +530,65 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	
+	private void addActionListenerToButtons() {
+
+		for(int i = 0; i < loggedInPanel.boxCount; i++) {
+			int roomNum = roomsData.getJSONObject(i).getInt("roomNum");
+			if (roomsData.getJSONObject(i).isNull("acceptDate")) {
+				loggedInPanel.reserveBtn[i].addActionListener(new ActionListener() {
+//									//ì˜ˆì•½ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
+//									@Override
+					public void actionPerformed(ActionEvent e) {
+//										remove(loggedInPanel);
+//										deleteLoggedInPanel();
+						if (hc.isAdmin()) {
+							editBtn.setVisible(true);
+						}
+						loggedInPanel.setVisible(false);
+						addSeats(roomNum);
+						deleteAdminBtn();
+						refresh.setVisible(false);
+						mainBtn.setVisible(true);
+						sprefresh.setVisible(true);
+						currentRoomNumber=roomNum;
+					}
+				});
+			} else {
+				if (!hc.isAdmin()) {
+					loggedInPanel.reserveBtn[i].addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							JOptionPane.showMessageDialog(null, "ì•„ì§ ì˜ˆì•½í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", "Message", JOptionPane.ERROR_MESSAGE);
+							
+						}
+						
+					});
+				} else {
+					loggedInPanel.reserveBtn[i].addActionListener(new ActionListener() {
+//						//ì˜ˆì•½ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
+//						@Override
+						public void actionPerformed(ActionEvent e) {
+				//							remove(loggedInPanel);
+				//							deleteLoggedInPanel();
+							if (hc.isAdmin()) {
+								editBtn.setVisible(true);
+							}
+							loggedInPanel.setVisible(false);
+							addSeats(roomNum);
+							deleteAdminBtn();
+							refresh.setVisible(false);
+							mainBtn.setVisible(true);
+							sprefresh.setVisible(true);
+							currentRoomNumber=roomNum;
+						}
+					});
+				}
+			}
+		}
+		
+	}
+
 	//changes display
 	
 	public void setLogInTextEmpty() {
@@ -499,8 +603,6 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		add(signUpPanelLabel);
 		logInLabelPanel.setVisible(true);
 		signUpPanel.setVisible(true);
-
-
 	}
 	
 	public void deleteSignUpPanel() {
@@ -512,135 +614,1044 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	
 	public void addLoggedInPanel() {
 		add(welcome);
-		
 		welcome.setVisible(true);
 		loggedInPanel.setVisible(true);
-		welcome.setText(hc.getName() + "´Ô ¹İ°©½À´Ï´Ù.");
+		welcome.setText(hc.getName() + "ë‹˜ ë°˜ê°‘ìŠµë‹ˆë‹¤.");
 		add(logOutBtn);
-		add(loggedInPanel);
+		add(loggedInPanel);	
+		
 		if(hc.isAdmin()) {
-//			add(loggedInPanel.reserve);
-			loggedInPanel.btnPanel.setPreferredSize(new Dimension(600, (50 / 4 + 1) * 100));
-			loggedInPanel.scroll.setPreferredSize(new Dimension(600, 405));
-			loggedInPanel.setBounds(6, 49, 600, 415);	
 			add(cRoom);
 			add(dRoom);
-			add(resetDate);
+			add(aBtn);
 		}
-
 		add(roomHintLabel);
-		roomHintLabel.setVisible(true);
 		roomPanelLabel = new AntialiasedLabel("");
 		roomPanelLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/room.jpg")));
 		roomPanelLabel.setBounds(0, 0, 800, 500);
 		add(roomPanelLabel);
 	}
 	
-	class createRoom extends JFrame implements ActionListener{
-		public createRoom() {
-		
-		setSize(370,347);
-		setLayout(null);
-		roomNum = new JTextField();
-		roomNum.setBounds(125,35,150,25);
-		roomNum.setToolTipText("¼ıÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
-		roomNumLabel = new JLabel("°­ÀÇ½Ç È£¼ö");
-		roomNumLabel.setBounds(48,35,70,25);
-		roomNumLabel.setHorizontalAlignment(JLabel.RIGHT);
-		add(roomNumLabel);
-		add(roomNum);
-		
-		col = new JTextField();
-		col.setBounds(125,82,150,25);
-		col.setToolTipText("¼ıÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
-		colLabel = new JLabel("¿­ ¼ö");
-		colLabel.setBounds(65,82,50,25);
-		colLabel.setHorizontalAlignment(JLabel.RIGHT);
-		add(colLabel);
-		add(col);
-		
+	class CreateRoom extends JFrame implements ActionListener{
+	       JTextField[] fields;
+//	       String[] fieldsName = {"roomNum", "year", "month", "date", "hour", "minute"};
+	       
+	       JLabel[] labels;
+	       String[] labelsName = {"ê°•ì˜ì‹¤ í˜¸ìˆ˜", "ë…„", "ì›”", "ì¼", "ì‹œê°„","ë¶„"};
+	       
+	       //ì´ˆê¸°í™” ë‚ ì§œ ì„¤ì •
+	       UtilDateModel model = new UtilDateModel();
+	       JDatePanelImpl datePanel = new JDatePanelImpl(model);
+	       JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+	       JComboBox<String> resetHour = new JComboBox<>();
+	       JComboBox<String> resetMinute = new JComboBox<>();
+	       JLabel hour = new JLabel("ì‹œ");
+	       JLabel minute = new JLabel("ë¶„");
+	       JCheckBox shuffle;
+	       JComboBox<String> weekBox;
+	       JTextField weekDelayField;
+	       JComboBox<String> monthWeekBox;
+	       JComboBox<String> dayBox;
+	       JTextField monthResetDelayField;
+	       JTextField noResetDelayField;
+	       
+	       //ì˜ˆì•½ì‹œì‘ì‹œê°„ ì„¤ì •
+	       UtilDateModel model2 = new UtilDateModel();
+	       JDatePanelImpl datePanel2 = new JDatePanelImpl(model2);
+	       JDatePickerImpl datePicker2 = new JDatePickerImpl(datePanel2);
+	       JComboBox<String> startHour = new JComboBox<>();
+	       JComboBox<String> startMinute = new JComboBox<>();
+	       JLabel hour2 = new JLabel("ì‹œ");
+	       JLabel minute2 = new JLabel("ë¶„");
+	       
+	       //3ë²ˆì§¸í•­ëª© íŒ¨ë„
+	       JPanel p1 = new JPanel();
+	       JPanel p2 = new JPanel();
+	       JPanel p3 = new JPanel();
+//	       JButton b1 = new JButton();
+//	       JButton b2 = new JButton();
+//	       JButton b3 = new JButton();
+	       
+	       //ì˜µì…˜ ë¦¬ìŠ¤íŠ¸
+	       JComboBox<String> options = new JComboBox<>();
+	       
+	       
+	      public CreateRoom() {
+	      setTitle("ê°•ì˜ì‹¤ ì˜ˆì•½í•˜ê¸°");
+	      setSize(900,450);
+	      setLayout(null);
+	      roomNumField = new JTextField();
+	      roomNumField.setBounds(115,35,150,25);
+	      roomNumField.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	      roomNumLabel = new JLabel("ê°•ì˜ì‹¤ í˜¸ìˆ˜");
+	      roomNumLabel.setBounds(38,35,70,25);
+	      roomNumLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(roomNumLabel);
+	      add(roomNumField);
+	      
+	      colField = new JTextField();
+	      colField.setBounds(115,82,150,25);
+	      colField.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	      colLabel = new JLabel("ì—´ ìˆ˜");
+	      colLabel.setBounds(55,82,50,25);
+	      colLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(colLabel);
+	      add(colField);
+	      
 
-		row = new JTextField();
-		row.setBounds(125,129,150,25);
-		row.setToolTipText("¼ıÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
-		rowLabel = new JLabel("Çà ¼ö");
-		rowLabel.setBounds(65,129,50,25);
-		rowLabel.setHorizontalAlignment(JLabel.RIGHT);
-		add(rowLabel);
-		add(row);
-		
-		
-		colBlank = new JTextField();
-		colBlank.setBounds(125,176,150,25);
-		colBlankLabel = new JLabel("¿­ ¶ç¿ì±â");
-		colBlankLabel.setBounds(35,176,80,25);
-		colBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
-		add(colBlankLabel);
-		add(colBlank);
-		
-		rowBlank = new JTextField();
-		rowBlank.setBounds(125,223,150,25);
-		rowBlankLabel = new JLabel("Çà ¶ç¿ì±â");
-		rowBlankLabel.setBounds(35,223,80,25);
-		rowBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
-		add(rowBlankLabel);
-		add(rowBlank);
-		
-		makeRoomBtn = new JButton("¹æ¸¸µé±â");
-		makeRoomBtn.addActionListener(this);
-		makeRoomBtn.setBounds(190,265,85,25);
-		
-		add(makeRoomBtn);
-//			
-//			cRoomPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-//			cRoomPanel.setLayout(new GridLayout(4,2,15,15));
-//			cRoomPanel.setBounds(63,78,500,350);
-//			add(cRoomPanel);
-		setLocationRelativeTo(null);
-		setVisible(true);
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			StringTokenizer colst = new StringTokenizer(colBlank.getText(), ", ");
-			StringTokenizer rowst = new StringTokenizer(rowBlank.getText(), ", ");
-			int[] colBlankArray = new int[colst.countTokens()];
-			int[] rowBlankArray = new int[rowst.countTokens()];
-			
-			System.out.println("coltokencount: " + colst.countTokens());
-			System.out.println("rowtokencount: " + rowst.countTokens());
-			
-			for (int i=0; i<colBlankArray.length; i++) {
-				colBlankArray[i] = Integer.valueOf(colst.nextToken());
-			}
-			for (int i=0; i<rowBlankArray.length; i++) {
-				rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
-			}
-			
-			for (int a : colBlankArray) {
-				System.out.println("colblank: " + a);
-			}
-			for (int a : rowBlankArray) {
-				System.out.println("rowblank: " + a);
-			}
-			System.out.println("colblanklength: " + colBlankArray.length);
-			System.out.println("rowblanklength: " + rowBlankArray.length);
-			
-			hc.postCreateRoom(Integer.valueOf(roomNum.getText()), 
-							  Integer.valueOf(col.getText()), 
-							  Integer.valueOf(row.getText()), 
-							  colBlankArray.length == 0 ? null : colBlankArray,
-							  rowBlankArray.length == 0 ? null : rowBlankArray);
-			dispose();
-			loggedInPanel.revalidate();
-			loggedInPanel.repaint();
-			repaint();
-		}
-		
-	}
+	      rowField = new JTextField();
+	      rowField.setBounds(115,129,150,25);
+	      rowField.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	      rowLabel = new JLabel("í–‰ ìˆ˜");
+	      rowLabel.setBounds(55,129,50,25);
+	      rowLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(rowLabel);
+	      add(rowField);
+	      
+	      
+	      colBlankField = new JTextField();
+	      colBlankField.setBounds(115,176,150,25);
+	      colBlankLabel = new JLabel("ì—´ ë„ìš°ê¸°");
+	      colBlankLabel.setBounds(25,176,80,25);
+	      colBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(colBlankLabel);
+	      add(colBlankField);
+	      
+	      rowBlankField = new JTextField();
+	      rowBlankField.setBounds(115,223,150,25);
+	      rowBlankLabel = new JLabel("í–‰ ë„ìš°ê¸°");
+	      rowBlankLabel.setBounds(25,223,80,25);
+	      rowBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(rowBlankLabel);
+	      add(rowBlankField);
+	      
+	      makeRoomBtn = new JButton("ë°©ë§Œë“¤ê¸°");
+	      makeRoomBtn.addActionListener(this);
+	      makeRoomBtn.setBounds(180,265,85,25);
+	      add(makeRoomBtn);
+//	         
+//	         cRoomPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+//	         cRoomPanel.setLayout(new GridLayout(4,2,15,15));
+//	         cRoomPanel.setBounds(63,78,500,350);
+//	         add(cRoomPanel);
+	      
+	     //Reset Date  
+	    add(datePicker);
+	    datePicker.setBounds(340,35,200,30);
+	   
+
+	    JLabel selectDate = new JLabel("ì¢Œì„ì´ˆê¸°í™” ë‚ ì§œ ì„ íƒ");
+	    selectDate.setBounds(380,4,140,30);
+	    add(selectDate);
+	     
+	    for(int i = 0; i<24; i++) {
+	       resetHour.addItem(String.valueOf(i));
+	    }
+	    resetHour.setBounds(350,74,42,28);
+	    resetHour.setMaximumRowCount(5);
+	    add(resetHour);
+	   
+	    for(int i = 0; i<12; i++) {
+	       resetMinute.addItem(String.valueOf(i*5));
+	    } 
+	    resetMinute.setBounds(465,74,42,28);
+	    resetMinute.setMaximumRowCount(5);
+	    add(resetMinute);
+	    
+	    
+	    hour.setBounds(395,74,35,28);
+	    add(hour);
+	    minute.setBounds(510,74,35,28);
+	    add(minute);
+	    
+	    
+	    
+	     //start date
+	      add(datePicker2);
+	    datePicker2.setBounds(340,190,200,30);
+	    
+	    JLabel selectDate2 = new JLabel("ì˜ˆì•½ì‹œì‘ ë‚ ì§œ ì„ íƒ");
+	    selectDate2.setBounds(382,159,140,30);
+	    add(selectDate2);
+	    
+	    for(int i = 0; i<24; i++) {
+	       startHour.addItem(String.valueOf(i));
+	    }
+	    startHour.setBounds(350,229,42,28);
+	    startHour.setMaximumRowCount(5); 
+	    add(startHour);
+	   
+	    for(int i = 0; i<12; i++) {
+	       startMinute.addItem(String.valueOf(i*5));
+	    } 
+	    startMinute.setBounds(465,229,42,28);
+	    startMinute.setMaximumRowCount(5);
+	    add(startMinute);
+	    
+	    
+	    hour2.setBounds(395,229,42,28);
+	    add(hour2);
+	    
+	    minute2.setBounds(510,229,42,28);
+	    add(minute2);
+
+	    //shuffle checkBox
+	    shuffle = new JCheckBox("  ë¦¬ì…‹ ì‹œ ì…”í”Œ");
+	    shuffle.setBounds(445,300,100,20);
+	    shuffle.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    add(shuffle);
+	    
+	    
+	    //3ë²ˆì§¸ í•­ëª©ë“¤
+	    options.addItem("ì£¼ê¸°ì  ì´ˆê¸°í™” ì„¤ì •ì•ˆí•¨");
+	    options.addItem("ì£¼ ë‹¨ìœ„ ì´ˆê¸°í™”");
+	    options.addItem("ì›” ë‹¨ìœ„ ì´ˆê¸°í™”");
+	    
+	    options.setBounds(620,35,220,25);
+	    DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
+	    listRenderer.setHorizontalAlignment(DefaultListCellRenderer. CENTER);
+	    options.setRenderer(listRenderer);
+	    
+	    
+	    
+	    // íŒ¨ë„ ì„¤ì •
+	    DefaultListCellRenderer right = new DefaultListCellRenderer();
+	    right.setHorizontalAlignment(DefaultListCellRenderer. RIGHT);
+	    
+	    
+	       //ì£¼ ë‹¨ìœ„ ì„¤ì •
+	      p1.setBounds(595, 80, 270, 300);
+	      p1.setBorder(BorderFactory.createLineBorder(Color.magenta));
+	      p1.setLayout(null);
+	      
+	      JLabel week = new JLabel("ì£¼ ê°„ê²©");
+	      week.setBounds(70,25,50,20);
+	      
+	      JLabel weekDelay = new JLabel("ì˜¤í”ˆì§€ì—°(ë¶„)");
+	      weekDelay.setBounds(60,65,80,20);
+	      
+	      weekBox = new JComboBox<>();
+	      for(int i = 1; i <5 ; i++) weekBox.addItem(String.valueOf(i));
+	      weekBox.setBounds(70,27,80,20);
+	      weekBox.setBounds(140,25,80,20);
+	      
+	      weekDelayField = new JTextField();
+	      weekDelayField.setBounds(140,65,80,20);
+	      
+	      p1.add(week);
+	      p1.add(weekDelay);
+	      p1.add(weekBox);
+	      p1.add(weekDelayField);
+	      add(p1);
+	      p1.setVisible(false);
+	      
+	      //ì›” ë‹¨ìœ„ ì„¤ì •
+	      p2.setBounds(595, 80, 270, 300);
+	      p2.setBorder(BorderFactory.createLineBorder(Color.blue));
+	      p2.setLayout(null);
+	      
+	      JLabel monthResetWeek = new JLabel("ë²ˆì§¸ ì£¼");
+	      monthResetWeek.setBounds(155,25,50,20);
+	      
+	      JLabel day = new JLabel("ìš”ì¼");
+	      day.setBounds(155,65,50,20);
+	      
+	      
+	      JLabel monthResetDelay = new JLabel("ì˜¤í”ˆì§€ì—°(ë¶„)");
+	      monthResetDelay.setBounds(60,105,80,20);
+	      monthWeekBox = new JComboBox<>();
+	      for(int i = 1; i <5 ; i++) monthWeekBox.addItem(String.valueOf(i));
+	      monthWeekBox.setRenderer(right);
+	      monthWeekBox.setBounds(70,27,80,20);
+	      
+	      
+	      
+	      dayBox = new JComboBox<>();
+	      String[] days = {"ì¼","ì›”","í™”","ìˆ˜","ëª©","ê¸ˆ","í† "};
+	      for(int i = 0; i < 7; i++) {         
+	         dayBox.addItem(days[i]);
+	      }
+	      dayBox.setRenderer(right);
+	      dayBox.setBounds(70,67,80,20);
+	      
+	      monthResetDelayField = new JTextField();
+	      monthResetDelayField.setBounds(140,105,80,20);
+	      
+	      p2.add(monthResetDelay);
+	      p2.add(day);
+	      p2.add(monthResetWeek);
+	      p2.add(monthWeekBox);
+	      p2.add(dayBox);
+	      p2.add(monthResetDelayField);
+	      add(p2);
+	      p2.setVisible(false);
+	      
+	      
+	      //ì´ˆê¸°í™” ì„¤ì • ì•ˆí•¨
+	      p3.setBounds(595, 80, 270, 300);
+	      p3.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+	      p3.setLayout(null);
+	      
+	      JLabel noResetDelay = new JLabel("ì˜¤í”ˆì§€ì—°(ë¶„)");
+	      noResetDelay.setBounds(60,105,80,20);
+	      
+	      noResetDelayField = new JTextField();
+	      noResetDelayField.setBounds(140,105,80,20);
+	      
+	      p3.add(noResetDelay);
+	      p3.add(noResetDelayField);
+	      add(p3);
+	      p3.setVisible(true);
+	      
+	      
+	      
+	    options.addActionListener(new ActionListener() {
+
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	         
+	         
+	         int index = options.getSelectedIndex();
+
+	         if(index == 0) {
+	            if(p3!=null) {
+	            p1.setVisible(false);
+	            p2.setVisible(false);
+	            }
+	            p3.setVisible(true);
+	         }
+	         else if(index==1) {
+	            if(p2 != null) {
+	               p2.setVisible(false);
+	               p3.setVisible(false);
+	            }
+	            p1.setVisible(true);
+	         }
+	         else if(index==2) {
+	         if(p1!=null) {
+	         p1.setVisible(false);
+	         p3.setVisible(false);
+	         }
+	         p2.setVisible(true);
+	         }
+	      }
+	       
+	    });
+	    add(options);
+	   
+	    
+	    
+//	    b1.setBounds(650,35,35,35);
+//	    b1.addActionListener(this);
+	//    
+	//    
+//	    b2.setBounds(690,35,35,35);
+//	    b3.setBounds(730,35,35,35);
+//	    add(b1);
+//	    add(b2);
+//	    add(b3);
+	      setLocationRelativeTo(null);
+	      setVisible(true);
+	      }
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	        RoomCreator rc = new RoomCreator();
+	         StringTokenizer colst = new StringTokenizer(colBlankField.getText(), ", ");
+	         StringTokenizer rowst = new StringTokenizer(rowBlankField.getText(), ", ");
+	         int[] colBlankArray = new int[colst.countTokens()];
+	         int[] rowBlankArray = new int[rowst.countTokens()];
+	         
+	         for (int i=0; i<colBlankArray.length; i++) {
+	            colBlankArray[i] = Integer.valueOf(colst.nextToken());
+	         }
+	         for (int i=0; i<rowBlankArray.length; i++) {
+	            rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
+	         }
+	         
+	         int roomNum = Integer.valueOf(roomNumField.getText());
+	         int col = Integer.valueOf(colField.getText());
+	         int row = Integer.valueOf(rowField.getText());
+	         int[] colBlank = colBlankArray.length == 0 ? null : colBlankArray;
+	         int[] rowBlank = rowBlankArray.length == 0 ? null : rowBlankArray;
+	         rc.setRoomNum(roomNum);
+	         rc.setCol(col);
+	         rc.setRow(row);
+	         if (colBlank != null) {
+	            rc.setColBlank(colBlank);
+	         }
+	         if (rowBlank != null) {
+	            rc.setRowBlank(rowBlank);
+	         }
+	         
+	         
+	         Date resetDate = (Date) datePicker.getModel().getValue();
+	         if (resetDate != null) {
+	            resetDate.setHours(Integer.valueOf((String) resetHour.getSelectedItem() == "" ? "0" : (String) resetHour.getSelectedItem()));
+	            resetDate.setMinutes(Integer.valueOf((String) resetMinute.getSelectedItem() == "" ? "0" : (String) resetMinute.getSelectedItem()));
+	            resetDate.setSeconds(0);
+	            rc.setResetDate(resetDate);
+	         }
+	         
+	         Date acceptDate = (Date) datePicker2.getModel().getValue();
+	         if (acceptDate != null) {
+	            acceptDate.setHours(Integer.valueOf((String)startHour.getSelectedItem() == "" ? "0" : (String)startHour.getSelectedItem()));
+	            acceptDate.setMinutes(Integer.valueOf((String) startMinute.getSelectedItem() == "" ? "0" : (String) startMinute.getSelectedItem()));
+	            acceptDate.setSeconds(0);
+	            rc.setAcceptDate(acceptDate);
+	         }
+	         
+	         boolean isShuffle = shuffle.isSelected();
+	         rc.setShuffle(isShuffle);
+	         int openDeffer;
+	         
+	         int measure = options.getSelectedIndex();
+	         if (measure == 1) {
+	            measure = 0;
+	            int weekendInterval = weekBox.getSelectedIndex()+1;
+	            rc.setMeasure(measure);
+	            rc.setWeekendInterval(weekendInterval);
+	            if (!weekDelayField.getText().equals("")) {
+			        openDeffer = Integer.valueOf(weekDelayField.getText());
+			        rc.setOpenDeffer(openDeffer);
+			     } else {
+			        rc.setOpenDeffer(0);
+			     }
+	         }else if (measure == 2) {
+	            measure = 1;
+	            int weekNth = monthWeekBox.getSelectedIndex()+1;
+	            int day = dayBox.getSelectedIndex();
+	            rc.setWeekNth(weekNth);
+	            rc.setMeasure(measure);
+	            rc.setDay(day);
+	            if (!monthResetDelayField.getText().equals("")) {
+	 	           openDeffer = Integer.valueOf(monthResetDelayField.getText());
+	 	           rc.setOpenDeffer(openDeffer);
+	 	         } else {
+	 	        	rc.setOpenDeffer(0);
+	 	         }
+	         }
+	         
+	         System.out.println(hc.postCreateRoom(rc));
+	         loggedInPanel.setVisible(false);
+        	 refreshLoggedInPanel();
+	         dispose();
+	         
+	      }
+	      
+	   }
+	
+	class UpdateRoom extends JFrame implements ActionListener{
+	       JTextField[] fields;
+//	       String[] fieldsName = {"roomNum", "year", "month", "date", "hour", "minute"};
+	       
+	       JLabel[] labels;
+	       String[] labelsName = {"ê°•ì˜ì‹¤ í˜¸ìˆ˜", "ë…„", "ì›”", "ì¼", "ì‹œê°„","ë¶„"};
+	       
+	       //ì´ˆê¸°í™” ë‚ ì§œ ì„¤ì •
+	       UtilDateModel model = new UtilDateModel();
+	       JDatePanelImpl datePanel = new JDatePanelImpl(model);
+	       JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+	       JComboBox<String> resetHour = new JComboBox<>();
+	       JComboBox<String> resetMinute = new JComboBox<>();
+	       JLabel hour = new JLabel("ì‹œ");
+	       JLabel minute = new JLabel("ë¶„");
+	       JCheckBox shuffle;
+	       JComboBox<String> weekBox;
+	       JTextField weekDelayField;
+	       JComboBox<String> monthWeekBox;
+	       JComboBox<String> dayBox;
+	       JTextField monthResetDelayField;
+	       JTextField noResetDelayField;
+	       
+	       //ì˜ˆì•½ì‹œì‘ì‹œê°„ ì„¤ì •
+	       UtilDateModel model2 = new UtilDateModel();
+	       JDatePanelImpl datePanel2 = new JDatePanelImpl(model2);
+	       JDatePickerImpl datePicker2 = new JDatePickerImpl(datePanel2);
+	       JComboBox<String> startHour = new JComboBox<>();
+	       JComboBox<String> startMinute = new JComboBox<>();
+	       JLabel hour2 = new JLabel("ì‹œ");
+	       JLabel minute2 = new JLabel("ë¶„");
+	       
+	       //3ë²ˆì§¸í•­ëª© íŒ¨ë„
+	       JPanel p1 = new JPanel();
+	       JPanel p2 = new JPanel();
+	       JPanel p3 = new JPanel();
+//	       JButton b1 = new JButton();
+//	       JButton b2 = new JButton();
+//	       JButton b3 = new JButton();
+	       
+	       //ì˜µì…˜ ë¦¬ìŠ¤íŠ¸
+	       JComboBox<String> options = new JComboBox<>();
+	       
+	       
+	      public UpdateRoom(int roomNum, JSONObject roomData) {
+	      setTitle("ê°•ì˜ì‹¤ ì˜ˆì•½í•˜ê¸°");
+	      setSize(900,450);
+	      setLayout(null);
+	      roomNumField = new JTextField();
+	      roomNumField.setBounds(115,35,150,25);
+	      roomNumField.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	      roomNumField.setEditable(false);
+	      roomNumField.setText(String.valueOf(roomNum));
+	      roomNumLabel = new JLabel("ê°•ì˜ì‹¤ í˜¸ìˆ˜");
+	      roomNumLabel.setBounds(38,35,70,25);
+	      roomNumLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(roomNumLabel);
+	      add(roomNumField);
+	      
+	      
+	      colField = new JTextField();
+	      colField.setBounds(115,82,150,25);
+	      colField.setText(String.valueOf(roomData.getInt("column")));
+	      colField.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	      colLabel = new JLabel("ì—´ ìˆ˜");
+	      colLabel.setBounds(55,82,50,25);
+	      colLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(colLabel);
+	      add(colField);
+	      
+
+	      rowField = new JTextField();
+	      rowField.setBounds(115,129,150,25);
+	      rowField.setText(String.valueOf(roomData.getInt("row")));
+	      rowField.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	      rowLabel = new JLabel("í–‰ ìˆ˜");
+	      rowLabel.setBounds(55,129,50,25);
+	      rowLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(rowLabel);
+	      add(rowField);
+	      
+	      
+	      colBlankField = new JTextField();
+	      colBlankField.setBounds(115,176,150,25);
+	      colBlankLabel = new JLabel("ì—´ ë„ìš°ê¸°");
+	      colBlankLabel.setBounds(25,176,80,25);
+	      if (!roomData.isNull("columnBlankLine")) {  
+	    	  JSONArray colArray = roomData.getJSONArray("columnBlankLine");
+	    	  String colBlankText = "";
+	    	  for (int i=0; i<colArray.length(); i++) {
+	    		  colBlankText += colArray.get(i);
+	    		  if (i != colArray.length()-1)
+	    			  colBlankText += ", ";
+	    	  }
+	    	  colBlankField.setText(colBlankText);
+	      }
+	      colBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(colBlankLabel);
+	      add(colBlankField);
+	      
+	      rowBlankField = new JTextField();
+	      rowBlankField.setBounds(115,223,150,25);
+	      if (!roomData.isNull("rowBlankLine")) {
+	    	  JSONArray rowArray = roomData.getJSONArray("rowBlankLine");
+		      String rowBlankText = "";
+		      for (int i=0; i<rowArray.length(); i++) {
+		    	  rowBlankText += rowArray.get(i);
+		    	  if (i != rowArray.length()-1)
+		    	  rowBlankText += ", ";
+		      }
+		      rowBlankField.setText(rowBlankText);
+	      }
+	      
+	      rowBlankLabel = new JLabel("í–‰ ë„ìš°ê¸°");
+	      rowBlankLabel.setBounds(25,223,80,25);
+	      rowBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
+	      add(rowBlankLabel);
+	      add(rowBlankField);
+	     
+	      makeRoomBtn = new JButton("ì„¤ì •ë³€ê²½");
+	      makeRoomBtn.addActionListener(this);
+	      makeRoomBtn.setBounds(180,265,85,25);
+	      add(makeRoomBtn);
+	     
+	      
+//	         
+//	         cRoomPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+//	         cRoomPanel.setLayout(new GridLayout(4,2,15,15));
+//	         cRoomPanel.setBounds(63,78,500,350);
+//	         add(cRoomPanel);
+	      
+	     //Reset Date  
+	    add(datePicker);
+	    datePicker.setBounds(340,35,200,30);
+	    model.setDate(2022, 7, 5);
+	   
+
+	    JLabel selectDate = new JLabel("ì¢Œì„ì´ˆê¸°í™” ë‚ ì§œ ì„ íƒ");
+	    selectDate.setBounds(380,4,140,30);
+	    add(selectDate);
+	     
+	    for(int i = 0; i<24; i++) {
+	       resetHour.addItem(String.valueOf(i));
+	    }
+	    resetHour.setBounds(350,74,42,28);
+	    resetHour.setMaximumRowCount(5);
+	    add(resetHour);
+	   
+	    for(int i = 0; i<12; i++) {
+	       resetMinute.addItem(String.valueOf(i*5));
+	    } 
+	    resetMinute.setBounds(465,74,42,28);
+	    resetMinute.setMaximumRowCount(5);
+//	    resetMinute.setSelectedIndex(anIndex);
+	    add(resetMinute);
+	    
+	    
+	    hour.setBounds(395,74,35,28);
+	    add(hour);
+	    minute.setBounds(510,74,35,28);
+	    add(minute);
+	    
+	    
+	    
+	     //start date
+	      add(datePicker2);
+	    datePicker2.setBounds(340,190,200,30);
+	    
+	    JLabel selectDate2 = new JLabel("ì˜ˆì•½ì‹œì‘ ë‚ ì§œ ì„ íƒ");
+	    selectDate2.setBounds(382,159,140,30);
+	    add(selectDate2);
+	    
+	    for(int i = 0; i<24; i++) {
+	       startHour.addItem(String.valueOf(i));
+	    }
+	    startHour.setBounds(350,229,42,28);
+	    startHour.setMaximumRowCount(5); 
+//	    startHour.setSelectedIndex(anIndex);
+	    add(startHour);
+	   
+	    for(int i = 0; i<12; i++) {
+	       startMinute.addItem(String.valueOf(i*5));
+	    } 
+	    startMinute.setBounds(465,229,42,28);
+	    startMinute.setMaximumRowCount(5);
+//	    startMinute.setSelectedIndex(anIndex);
+	    add(startMinute);
+	    
+	    
+	    hour2.setBounds(395,229,42,28);
+	    add(hour2);
+	    
+	    minute2.setBounds(510,229,42,28);
+	    add(minute2);
+
+	    //shuffle checkBox
+	    shuffle = new JCheckBox("  ë¦¬ì…‹ ì‹œ ì…”í”Œ");
+	    shuffle.setBounds(445,300,100,20);
+	    shuffle.setHorizontalTextPosition(SwingConstants.RIGHT);
+	    if(roomData.getBoolean("isShuffle")==true) {
+	    	shuffle.setSelected(true);
+	    }else shuffle.setSelected(false);
+	    add(shuffle);
+	    
+	    
+	    //3ë²ˆì§¸ í•­ëª©ë“¤
+	    options.addItem("ì£¼ê¸°ì  ì´ˆê¸°í™” ì„¤ì •ì•ˆí•¨");
+	    options.addItem("ì£¼ ë‹¨ìœ„ ì´ˆê¸°í™”");
+	    options.addItem("ì›” ë‹¨ìœ„ ì´ˆê¸°í™”");
+	    
+	    options.setBounds(620,35,220,25);
+	    DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
+	    listRenderer.setHorizontalAlignment(DefaultListCellRenderer. CENTER);
+	    options.setRenderer(listRenderer);
+	    
+	    
+	    
+	    // íŒ¨ë„ ì„¤ì •
+	    DefaultListCellRenderer right = new DefaultListCellRenderer();
+	    right.setHorizontalAlignment(DefaultListCellRenderer. RIGHT);
+	    
+	    
+	       //ì£¼ ë‹¨ìœ„ ì„¤ì •
+	      p1.setBounds(595, 80, 270, 300);
+	      p1.setBorder(BorderFactory.createLineBorder(Color.magenta));
+	      p1.setLayout(null);
+	      
+	      JLabel week = new JLabel("ì£¼ ê°„ê²©");
+	      week.setBounds(70,25,50,20);
+	      
+	      JLabel weekDelay = new JLabel("ì˜¤í”ˆì§€ì—°(ë¶„)");
+	      weekDelay.setBounds(60,65,80,20);
+	      
+	      weekBox = new JComboBox<>();
+	      for(int i = 1; i <5 ; i++) weekBox.addItem(String.valueOf(i));
+//	      weekBox.setSelectedIndex(roomData.);
+	      weekBox.setBounds(140,25,80,20);
+	      
+	      
+	      weekDelayField = new JTextField();
+	      weekDelayField.setBounds(140,65,80,20);
+	      if(!roomData.isNull("openDeffer"))
+	      weekDelayField.setText(String.valueOf(roomData.getInt("openDeffer")));
+	      
+	      p1.add(week);
+	      p1.add(weekDelay);
+	      p1.add(weekBox);
+	      p1.add(weekDelayField);
+	      add(p1);
+	      p1.setVisible(false);
+	      
+	      //ì›” ë‹¨ìœ„ ì„¤ì •
+	      p2.setBounds(595, 80, 270, 300);
+	      p2.setBorder(BorderFactory.createLineBorder(Color.blue));
+	      p2.setLayout(null);
+	      
+	      JLabel monthResetWeek = new JLabel("ë²ˆì§¸ ì£¼");
+	      monthResetWeek.setBounds(155,25,50,20);
+	      
+	      
+	      JLabel day = new JLabel("ìš”ì¼");
+	      day.setBounds(155,65,50,20);
+	      
+	      
+	      JLabel monthResetDelay = new JLabel("ì˜¤í”ˆì§€ì—°(ë¶„)");
+	      monthResetDelay.setBounds(60,105,80,20);
+	      monthWeekBox = new JComboBox<>();
+	      for(int i = 1; i <5 ; i++) monthWeekBox.addItem(String.valueOf(i));
+	      monthWeekBox.setRenderer(right);
+	      monthWeekBox.setBounds(70,27,80,20);
+	      
+	      
+	      
+	      dayBox = new JComboBox<>();
+	      String[] days = {"ì¼","ì›”","í™”","ìˆ˜","ëª©","ê¸ˆ","í† "};
+	      for(int i = 0; i < 7; i++) {         
+	         dayBox.addItem(days[i]);
+	      }
+	      dayBox.setRenderer(right);
+	      dayBox.setBounds(70,67,80,20);
+	      
+	      monthResetDelayField = new JTextField();
+	      monthResetDelayField.setBounds(140,105,80,20);
+	      if(!roomData.isNull("openDeffer"))
+		      monthResetDelayField.setText(String.valueOf(roomData.getInt("openDeffer")));
+	      
+	      p2.add(monthResetDelay);
+	      p2.add(day);
+	      p2.add(monthResetWeek);
+	      p2.add(monthWeekBox);
+	      p2.add(dayBox);
+	      p2.add(monthResetDelayField);
+	      add(p2);
+	      p2.setVisible(false);
+	      
+	      
+	      //ì´ˆê¸°í™” ì„¤ì • ì•ˆí•¨
+	      p3.setBounds(595, 80, 270, 300);
+	      p3.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+	      p3.setLayout(null);
+	      
+	      JLabel noResetDelay = new JLabel("ì˜¤í”ˆì§€ì—°(ë¶„)");
+	      noResetDelay.setBounds(60,105,80,20);
+	      
+	      noResetDelayField = new JTextField();
+	      noResetDelayField.setBounds(140,105,80,20);
+	      if(!roomData.isNull("openDeffer"))
+		      noResetDelayField.setText(String.valueOf(roomData.getInt("openDeffer")));
+	      
+	      p3.add(noResetDelay);
+	      p3.add(noResetDelayField);
+	      add(p3);
+	      p3.setVisible(true);
+	      
+	      
+	      if (!roomData.isNull("measure")) {
+	    	  if(roomData.getInt("measure")==0) {
+	    		  
+	    		  options.setSelectedIndex(1);
+	    		  weekBox.setSelectedIndex(roomData.getInt("weekendInterval")-1);
+	    		  p3.setVisible(false);
+	    		  p1.setVisible(true);
+	    	  }else if (roomData.getInt("measure")==1){
+	    		  options.setSelectedIndex(2);
+	    		  monthWeekBox.setSelectedIndex(roomData.getInt("weekNth")-1);
+	    		  dayBox.setSelectedIndex(roomData.getInt("day")-1);
+	    		  p3.setVisible(false);
+	    		  p2.setVisible(true);
+	    	  }
+	    	  
+	      }else {
+    		  options.setSelectedIndex(0);
+    	  }
+	      
+	      
+	    options.addActionListener(new ActionListener() {
+
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	         
+	         
+	         int index = options.getSelectedIndex();
+
+	         if(index == 0) {
+	            if(p3!=null) {
+	            p1.setVisible(false);
+	            p2.setVisible(false);
+	            }
+	            p3.setVisible(true);
+	         }
+	         else if(index==1) {
+	            if(p2 != null) {
+	               p2.setVisible(false);
+	               p3.setVisible(false);
+	            }
+	            p1.setVisible(true);
+	         }
+	         else if(index==2) {
+	         if(p1!=null) {
+	         p1.setVisible(false);
+	         p3.setVisible(false);
+	         }
+	         p2.setVisible(true);
+	         }
+	      }
+	       
+	    });
+	    add(options);
+	   
+	    
+	    
+//	    b1.setBounds(650,35,35,35);
+//	    b1.addActionListener(this);
+	//    
+	//    
+//	    b2.setBounds(690,35,35,35);
+//	    b3.setBounds(730,35,35,35);
+//	    add(b1);
+//	    add(b2);
+//	    add(b3);
+	    
+	    if (!roomData.isNull("resetDate")) {
+	    	
+	    	
+	    	
+	    	LocalDateTime dateTime = LocalDateTime.from(
+
+			        Instant.from(
+			            DateTimeFormatter.ISO_DATE_TIME.parse(roomData.getString("resetDate"))
+			        ).atZone(ZoneId.of("Asia/Seoul"))
+			    );
+			    String currentResetStr = dateTime.format(DateTimeFormatter.ofPattern("yyyyë…„ Mì›” dì¼(E) HHì‹œ mmë¶„"));
+	    	
+			    JLabel currentResetDate = new JLabel("í˜„ì¬ ì´ˆê¸°í™” ë‚ ì§œ : " + currentResetStr);
+	    	
+	    	add(currentResetDate);
+	    	currentResetDate.setBounds(50,315,300,20);
+	    }
+	    
+	    if (!roomData.isNull("acceptDate")) {
+	    	
+	    	LocalDateTime dateTime = LocalDateTime.from(
+
+			        Instant.from(
+			            DateTimeFormatter.ISO_DATE_TIME.parse(roomData.getString("acceptDate"))
+			        ).atZone(ZoneId.of("Asia/Seoul"))
+			    );
+			    String currentAcceptStr = dateTime.format(DateTimeFormatter.ofPattern("yyyyë…„ Mì›” dì¼(E) HHì‹œ mmë¶„"));
+	    	
+	    	JLabel currentAcceptDate = new JLabel("í˜„ì¬ ì˜ˆì•½ ì‹œì‘ ë‚ ì§œ : " + currentAcceptStr);
+	    	add(currentAcceptDate);
+	    	currentAcceptDate.setBounds(50,340,300,20);
+	    }
+	    
+	    
+	      setLocationRelativeTo(null);
+	      setVisible(true);
+	      }
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	        RoomCreator rc = new RoomCreator();
+	         StringTokenizer colst = new StringTokenizer(colBlankField.getText(), ", ");
+	         StringTokenizer rowst = new StringTokenizer(rowBlankField.getText(), ", ");
+	         int[] colBlankArray = new int[colst.countTokens()];
+	         int[] rowBlankArray = new int[rowst.countTokens()];
+	         
+	         for (int i=0; i<colBlankArray.length; i++) {
+	            colBlankArray[i] = Integer.valueOf(colst.nextToken());
+	         }
+	         for (int i=0; i<rowBlankArray.length; i++) {
+	            rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
+	         }
+	         
+	         int roomNum = Integer.valueOf(roomNumField.getText());
+	         int col = Integer.valueOf(colField.getText());
+	         int row = Integer.valueOf(rowField.getText());
+	         
+	         
+	         int[] colBlank = colBlankArray.length == 0 ? null : colBlankArray;
+	         int[] rowBlank = rowBlankArray.length == 0 ? null : rowBlankArray;
+	         rc.setRoomNum(roomNum);
+	         rc.setCol(col);
+	         rc.setRow(row);
+	         if (colBlank != null) {
+	            rc.setColBlank(colBlank);
+	         } else {
+	        	 rc.setColBlank(new int[0]);
+	         }
+	         if (rowBlank != null) {
+	            rc.setRowBlank(rowBlank);
+	         } else {
+	        	 rc.setRowBlank(new int[0]);
+	         }
+	         
+	         
+	         Date resetDate = (Date) datePicker.getModel().getValue();
+	         if (resetDate != null) {
+	            resetDate.setHours(Integer.valueOf((String) resetHour.getSelectedItem() == "" ? "0" : (String) resetHour.getSelectedItem()));
+	            resetDate.setMinutes(Integer.valueOf((String) resetMinute.getSelectedItem() == "" ? "0" : (String) resetMinute.getSelectedItem()));
+	            resetDate.setSeconds(0);
+	            rc.setResetDate(resetDate);
+	         } else {
+	        	 rc.setResetDate(null);
+	         }
+	         
+	         Date acceptDate = (Date) datePicker2.getModel().getValue();
+	         if (acceptDate != null) {
+	            acceptDate.setHours(Integer.valueOf((String)startHour.getSelectedItem() == "" ? "0" : (String)startHour.getSelectedItem()));
+	            acceptDate.setMinutes(Integer.valueOf((String) startMinute.getSelectedItem() == "" ? "0" : (String) startMinute.getSelectedItem()));
+	            acceptDate.setSeconds(0);
+	            rc.setAcceptDate(acceptDate);
+	         } else {
+	        	 rc.setResetDate(null);
+	         }
+	         
+	         boolean isShuffle = shuffle.isSelected();
+	         rc.setShuffle(isShuffle);
+	         int openDeffer;
+	         
+	         int measure = options.getSelectedIndex();
+	         if (measure == 1) {
+	            measure = 0;
+	            int weekendInterval = weekBox.getSelectedIndex()+1;
+	            rc.setMeasure(measure);
+	            rc.setWeekendInterval(weekendInterval);
+	            if (!weekDelayField.getText().equals("")) {
+			        openDeffer = Integer.valueOf(weekDelayField.getText());
+			        rc.setOpenDeffer(openDeffer);
+			     } else {
+			        rc.setOpenDeffer(0);
+			     }
+	         }else if (measure == 2) {
+	            measure = 1;
+	            int weekNth = monthWeekBox.getSelectedIndex()+1;
+	            int day = dayBox.getSelectedIndex();
+	            rc.setWeekNth(weekNth);
+	            rc.setMeasure(measure);
+	            rc.setDay(day);
+	            if (!monthResetDelayField.getText().equals("")) {
+	 	           openDeffer = Integer.valueOf(monthResetDelayField.getText());
+	 	           rc.setOpenDeffer(openDeffer);
+	 	         } else {
+	 	        	rc.setOpenDeffer(0);
+	 	         }
+	         }else if (measure == 0) {
+	        	 measure = -1;
+	        	 rc.setMeasure(measure);
+	         }
+	         
+	         
+	         
+	         
+	         
+	         System.out.println(hc.patchOneRoom(rc));
+	         seatsPanel.setVisible(false);
+	         addSeats(currentRoomNumber);
+	         dispose();
+	         
+	      }
+	      
+	   }
+	
+	class DeleteRoom extends JFrame implements ActionListener{
+	      
+	      public DeleteRoom() {
+	         setSize(320, 150);
+	         
+	         JLabel number = new JLabel("ê°•ì˜ì‹¤ í˜¸ìˆ˜");
+	         number.setBounds(30,30,100,25);
+	         
+	         deleteNum = new JTextField();
+	         deleteNum.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+	         deleteNum.setBounds(100,30,120,25);
+	         
+	         dBtn = new JButton("ë°© ì§€ìš°ê¸°");
+	         dBtn.setBounds(150,70,89,20);
+	         dBtn.addActionListener(this);
+	         
+	         
+	         add(number);
+	         add(deleteNum);
+	         add(dBtn);
+	         setLayout(null);
+	         setLocationRelativeTo(null);
+	         setVisible(true);
+	      }
+	      
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	         System.out.println(deleteNum.getText());
+	         if(deleteNum.getText().equals("")) {
+	            JOptionPane.showMessageDialog(null, "í˜¸ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”.", "ë¹ˆ ë‚´ìš©", JOptionPane.WARNING_MESSAGE);
+	         }else {
+	            hc.deleteRoom(Integer.valueOf(deleteNum.getText()));
+	            JOptionPane.showMessageDialog(null, "ê°•ì˜ì‹¤ì´ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.", "ì‚­ì œ", JOptionPane.PLAIN_MESSAGE);
+//	            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    		loggedInPanel.setVisible(false);
+	            refreshLoggedInPanel();
+	            dispose();
+	         }
+	         
+	      }
+	      
+	   }
+	
+	class GrantAdmin extends JFrame implements ActionListener{
+	      
+	      public GrantAdmin() {
+	         setSize(320, 150);
+	         
+	         JLabel number = new JLabel("userId");
+	         number.setBounds(30,30,100,25);
+	         
+	         deleteNum = new JTextField();
+	         deleteNum.setToolTipText("ê´€ë¦¬ì ê¶Œí•œì„ ë¶€ì—¬í•  ìœ ì € IDë¥¼ ì…ë ¥í•˜ì„¸ìš”.");
+	         deleteNum.setBounds(100,30,120,25);
+	         
+	         dBtn = new JButton("ê¶Œí•œ ë¶€ì—¬");
+	         dBtn.setBounds(150,70,89,20);
+	         dBtn.addActionListener(this);
+	         
+	         
+	         add(number);
+	         add(deleteNum);
+	         add(dBtn);
+	         setLayout(null);
+	         setLocationRelativeTo(null);
+	         setVisible(true);
+	      }
+	      
+	      @Override
+	      public void actionPerformed(ActionEvent e) {
+	         System.out.println(deleteNum.getText());
+	         if(deleteNum.getText().equals("")) {
+	            JOptionPane.showMessageDialog(null, "ì•„ì´ë””ë¥¼ ì…ë ¥í•˜ì„¸ìš”", "ë¹ˆ ë‚´ìš©", JOptionPane.WARNING_MESSAGE);
+	         }else {
+	            System.out.println(hc.patchGrantAdmin(deleteNum.getText()));
+	            JOptionPane.showMessageDialog(null, "í•´ë‹¹ ìœ ì €ì—ê²Œ ê¶Œí•œì´ ë¶€ì—¬ë˜ì—ˆìŠµë‹ˆë‹¤.", "ì™„ë£Œ", JOptionPane.PLAIN_MESSAGE);
+//	            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    		loggedInPanel.setVisible(false);
+	            refreshLoggedInPanel();
+	            dispose();
+	         }
+	         
+	      }
+	      
+	   }
+	
 	
 	public void deleteLoggedInPanel() {
 		remove(loggedInPanel);
+//		new createRoom();
 	}
 	
 	public void addMainLogIn() {
@@ -688,27 +1699,24 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		for (int i=0; i<reservedData.length; i++) {
 			reservedData[i] = Integer.valueOf((String) iter.next());
 		}
-		int[] reservedSeats;
 		seatsPanel = new SeatsPanel(col, row, colbl, rowbl, roomNum, reservedData, hc);
-		
-		seatsPanel.setBounds(10, 50, 780, 400);
+//		seatsPanel.setVisible(true);
+		seatsPanel.setBounds(10, 50, 800, 400);
 		seatsPanel.setBackground(Color.white);
 		
-
-		selectHintLabel = new AntialiasedLabel("");
-		selectHintLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/SelectHintLabel.jpg")));
-		selectHintLabel.setLayout(null);
-		selectHintLabel.setBounds(0,468,350,22);
-		add(selectHintLabel);
-		remove(roomHintLabel);
+		
+	    selectHintLabel = new AntialiasedLabel("");
+	    selectHintLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/SelectHintLabel.jpg")));
+	    selectHintLabel.setLayout(null);
+	    selectHintLabel.setBounds(0,468,350,22);
+	    add(selectHintLabel);
+	    remove(roomHintLabel);
 		remove(roomPanelLabel);
 		add(seatsPanel);
-//		remove(loggedInPanel);
 		add(roomPanelLabel);
-		seatsPanel.setVisible(true);
 //		seatsPanel.setBackground(Color.gray.brighter());
 		
-//		seatsPanel.setVisible(true);
+		seatsPanel.setVisible(true);
 	}
 	
 	public void deleteSeats() {
@@ -730,16 +1738,16 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public void deleteAdminBtn() {
+		aBtn.setVisible(false);
 		cRoom.setVisible(false);
 		dRoom.setVisible(false);
-		resetDate.setVisible(false);
 	}
 	
 	public void addAdminBtn() {
 		if(hc.isAdmin()) {
+		aBtn.setVisible(true);
 		cRoom.setVisible(true);
 		dRoom.setVisible(true);
-		resetDate.setVisible(true);
 		}
 	}
 	
@@ -771,7 +1779,6 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	//key events
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 			logInBtn.doClick();
 		}
@@ -786,6 +1793,4 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	public static void main(String[] args) {
 		new MainLogin();
 	}
-	
-	
 }

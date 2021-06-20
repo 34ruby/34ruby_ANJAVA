@@ -6,6 +6,7 @@ import javax.swing.*;
 
 class AntialiasedLabel extends JLabel {
 	
+	
 
 	String text;
 

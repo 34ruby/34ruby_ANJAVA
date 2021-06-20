@@ -9,13 +9,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.IntStream;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,37 +23,7 @@ import org.json.JSONObject;
 class SeatsPanel extends JPanel {
 	public JPanel buttonPanel = new JPanel();
 		
-	   class  reserves{  
-	      
-	      private int sitNum;
-	      private String userId;
-	      
-	      public reserves(int sitNum, String userId) {
-	         this.sitNum=sitNum;
-	         this.userId=userId;
-	      
-	         
-	      }
-	      
-
-	      
-	      public int getSitNum() {
-	         return sitNum;
-	      }
-
-	      public void setSitNum(int sitNum) {
-	         this.sitNum = sitNum;
-	      }
-
-	      public String getUserId() {
-	         return userId;
-	      }
-
-	      public void setUserId(String userId) {
-	         this.userId = userId;
-	      }
-
-	   }
+	   
 
 	   HttpCaller hc;
 	   boolean isAdmin =true;
@@ -69,11 +39,9 @@ class SeatsPanel extends JPanel {
 	   int maxseat;
 	   int roomNum;
 	   
-	   static int myReservedSeat = 0;
+	   int myReservedSeat = 0;
 	   int[] otherReservedSeats;
 	   
-	   
-	   ArrayList<reserves> reservedData =new ArrayList<>();
 	   
 	   MyButton[] btn;
 	   
@@ -96,64 +64,73 @@ class SeatsPanel extends JPanel {
 	      this.otherReservedSeats = otherReservedSeats;
 	      JSONArray reservedRooms = new JSONObject(hc.getUserDetail()).getJSONObject("data").getJSONArray("reservedRooms");
 	      for (int i=0; i<reservedRooms.length(); i++) {
-	    	  JSONObject obj;
-	    	  if ((obj = (JSONObject) reservedRooms.get(i)).getInt("roomNum") == roomNum) {
-	    		  SeatsPanel.myReservedSeat = obj.getInt("sitNum");
+	    	  JSONObject obj = (JSONObject) reservedRooms.get(i);
+	    	  if (!obj.isNull("roomNum")) {
+	    		  if (obj.getInt("roomNum") == roomNum) {
+	    			  myReservedSeat = obj.getInt("sitNum");
+	    		  }
 	    	  }
 	      }
 	      btn = new MyButton[maxseat];
+	      
+	      for (int i = 0; i < rowblock.length; i++) {
+	    	  rowblock[i] = rowblock[i] + i;
+	      }
+	      for (int i = 0; i < colblock.length; i++) {
+	    	  colblock[i] = colblock[i] + i;
+	      }
 
-//	         topLabel=new JLabel("¾È³çÇÏ¼¼¿ä. user.name´Ô");
+//	         topLabel=new JLabel("ì•ˆë…•í•˜ì„¸ìš”. user.nameë‹˜");
 	         buttonPanel=new JPanel();
-//	         topLabel.setFont(new Font("202È£½Ç ¿¹¾à", Font.BOLD, 30));
+//	         topLabel.setFont(new Font("202í˜¸ì‹¤ ì˜ˆì•½", Font.BOLD, 30));
 	         
 	         
-	         buttonPanel.setLayout(new GridLayout(column,row,10,20));
+	         buttonPanel.setLayout(new GridLayout(this.row,column,10,20));
 	         buttonPanel.setBackground(Color.white);
 	         
 	      
 
-	         //¿­À» °ø¹éÁÖ´Â ¹è¿­À» ¸¸µé¾î¼­ int k¿¡ ³Ö¾î¼­ j==kÀÏ¶§ ³Î·Î(°ø¹é)
+	         //ì—´ì„ ê³µë°±ì£¼ëŠ” ë°°ì—´ì„ ë§Œë“¤ì–´ì„œ int kì— ë„£ì–´ì„œ j==kì¼ë•Œ ë„ë¡œ(ê³µë°±)
 	         
 	         int index=1;
-	         for(int i=0; i<this.column; i++) {
-	            for(int j=0; j<this.row; j++) {
+	         for(int i=0; i<this.row; i++) {
+	            for(int j=0; j<this.column; j++) {
 	            	final int jj = j;
 	            	final int ii = i;
 	            	final int iidx = index;
-	            	btn[i*this.row+j]=new MyButton(){
-	        			@Override 
-	        			public void setBorder(Border border) {		
-	        			}
-	        		};
-		            btn[i*this.row+j].setPreferredSize(new Dimension(180,180));
-	            	if (IntStream.of(rowblock).anyMatch(x -> x == jj) || IntStream.of(colblock).anyMatch(x -> x == ii)) {
-	            		// °ø¹éÀÏ ¶§
-	            		btn[i*this.row+j].setEnabled(false);
-		                btn[i*this.row+j].setBackground(Color.white);
-		                btn[i*this.row+j].setBorder(null);
+	            	btn[i*this.column+j]=new MyButton();
+		            btn[i*this.column+j].setPreferredSize(new Dimension(180,180));
+	            	if (IntStream.of(colblock).anyMatch(x -> x == jj) || IntStream.of(rowblock).anyMatch(x -> x == ii)) {
+	            		// ê³µë°±ì¼ ë•Œ
+	            		btn[i*this.column+j].setEnabled(false);
+		                btn[i*this.column+j].setBackground(Color.white);
+		                btn[i*this.column+j].setBorder(null);
+		                
 	            	} else {
 	            		if (index == myReservedSeat) {
-	            			// ³»°¡ ¿¹¾àÇÑ ÀÚ¸® ÀÏ ¶§
-	            			btn[i*this.row+j].setEnabled(true);
-			                btn[i*this.row+j].setBackground(Color.orange);
-		            		btn[i*this.row+j].setText(String.valueOf(index++));
-		            		btn[i*this.row+j].setStatus(1);
+	            			// ë‚´ê°€ ì˜ˆì•½í•œ ìë¦¬ ì¼ ë•Œ
+	            			btn[i*this.column+j].setEnabled(true);
+			                btn[i*this.column+j].setBackground(Color.orange);
+		            		btn[i*this.column+j].setText(String.valueOf(index++));
+		            		btn[i*this.column+j].setStatus(1);
+		            		btn[i*this.column+j].setBorderPainted(false);
 	            		} else if (IntStream.of(otherReservedSeats).anyMatch(x -> x == iidx)) {
-	            			// ´Ù¸¥»ç¶÷ÀÌ ¿¹¾àÇÑ ÀÚ¸®ÀÏ ¶§
-	            			btn[i*this.row+j].setEnabled(true);
-			                btn[i*this.row+j].setBackground(Color.gray);
-		            		btn[i*this.row+j].setText(String.valueOf(index++));
-		            		btn[i*this.row+j].setStatus(2);
+	            			// ë‹¤ë¥¸ì‚¬ëŒì´ ì˜ˆì•½í•œ ìë¦¬ì¼ ë•Œ
+	            			btn[i*this.column+j].setEnabled(true);
+			                btn[i*this.column+j].setBackground(Color.gray);
+		            		btn[i*this.column+j].setText(String.valueOf(index++));
+		            		btn[i*this.column+j].setStatus(2);
+		            		btn[i*this.column+j].setBorderPainted(false);
 	            		} else {
-	            			// ºó ÀÚ¸®ÀÏ ¶§
-	            			btn[i*this.row+j].setEnabled(true);
-		            		btn[i*this.row+j].setText(String.valueOf(index++));
-			                btn[i*this.row+j].setBackground(Color.LIGHT_GRAY);
-			                btn[i*this.row+j].setStatus(0);
+	            			// ë¹ˆ ìë¦¬ì¼ ë•Œ
+	            			btn[i*this.column+j].setEnabled(true);
+		            		btn[i*this.column+j].setText(String.valueOf(index++));
+			                btn[i*this.column+j].setBackground(new Color(255,170,170));
+			                btn[i*this.column+j].setStatus(0);
+			                btn[i*this.column+j].setBorderPainted(false);
 	            		}
 	            	}
-	            	btn[i*this.row+j].addActionListener(new ActionListener() {
+	            	btn[i*this.column+j].addActionListener(new ActionListener() {
 	                    @Override
 	                    public void actionPerformed(ActionEvent e) {
 	                       for(int i=0; i<maxseat; i++) {
@@ -163,21 +140,23 @@ class SeatsPanel extends JPanel {
 	                       }
 	                    }
 	                });
-	            	buttonPanel.add(btn[i*this.row+j]);
+	            	buttonPanel.add(btn[i*this.column+j]);
+//	            	buttonPanel.setBackground(Color.);
 	             }
 	         }
 	         add(buttonPanel);
-	         
-	         buttonPanel.setBounds(10,000,760,400);
+	         buttonPanel.setBounds(10,0,760,400);
 	         repaint();     
 	   }
 	   
 	   
 	   
-	   //-----------------------------------------------------------------------
-	   //¿¹¾àÇÏ½Ã°Ú½À´Ï±î?
+
+
+
+	//-----------------------------------------------------------------------
+	   //ì˜ˆì•½í•˜ì‹œê² ìŠµë‹ˆê¹Œ?
 	   class yeyakok extends JFrame implements ActionListener {
-//		  JPanel popPanel;
 	      JLabel topLabel;
 	      JButton yesbtn;
 	      JButton noBtn;
@@ -189,66 +168,77 @@ class SeatsPanel extends JPanel {
 	    	  this.roomNum = roomNum;
 	    	  this.number = number;
 	    	  this.setLayout(null);
-	    	  
 	    	  setSize(300,120);
 	          setLocationRelativeTo(null);
 	          topLabel = new JLabel();
 	          
 	          if (btn[index].getStatus() == 0) {
-	        	  
+//	        	  setLayout(new BorderLayout());
 	        	  if (myReservedSeat > 0) {
-	        		  topLabel.setText("ÀÌ¹Ì ÀÌ ¹æ¿¡ ¿¹¾àÇÑ ÀÚ¸®°¡ ÀÖ½À´Ï´Ù.");
-	        		  topLabel.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+	        		  topLabel.setText("ì´ë¯¸ ì´ ë°©ì— ì˜ˆì•½í•œ ìë¦¬ê°€ ìˆìŠµë‹ˆë‹¤.");
+	        		  topLabel.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 	        		  topLabel.setBounds(45,20,210,40);
-			          noBtn = new JButton("µ¹¾Æ°¡±â");
-			          noBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+			          noBtn = new JButton("ëŒì•„ê°€ê¸°");
+			          noBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 			          noBtn.setForeground(Color.BLACK);
 			          noBtn.setBackground(Color.LIGHT_GRAY);
 			          noBtn.addActionListener(this);
 			          noBtn.setBorderPainted(false);
-			          noBtn.setBounds(100,70,100,20);
+			          noBtn.setBounds(100,70,100,20);	
 			          this.add(topLabel);
 			          this.add(noBtn);
 			          this.setUndecorated(true);
 	        	  } else {
-	        		  topLabel.setText(number+" ¹ø ÁÂ¼®À» ¿¹¾àÇÏ½Ã°Ú½À´Ï±î?");
-	        		  topLabel.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
-		        	  
-			          yesbtn = new JButton("³×");
-			          yesbtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
-			          yesbtn.setForeground(Color.white);
-			          yesbtn.setBackground(new Color(135,77,162));
-			          yesbtn.addActionListener(this);
-			          yesbtn.setBorderPainted(false);
-			          
-			          noBtn = new JButton("¾Æ´Ï¿À");
-			          noBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
-			          noBtn.setForeground(Color.BLACK);
-			          noBtn.setBackground(Color.LIGHT_GRAY);
-			          noBtn.addActionListener(this);
-			          noBtn.setBorderPainted(false);
-			          
-			          topLabel.setBounds(60,30,200,20);
-			          yesbtn.setBounds(20,70,80,20);
-			          noBtn.setBounds(200,70,80,20);
-			          this.add(topLabel);
-			          this.add(yesbtn);
-			          this.add(noBtn);
-			          this.setUndecorated(true);
+	        		  JSONObject rsvd = new JSONObject(hc.getOneRoom(roomNum)).getJSONObject("data").getJSONObject("roomData").getJSONObject("reservedData");
+	    			  int[] reservedData = new int[rsvd.length()];
+	    			  Iterator<String> iter = rsvd.keys();
+	    			  for (int i=0; i<reservedData.length; i++) {
+	    				  reservedData[i] = Integer.valueOf((String) iter.next());
+	    			  }
+	    			  if (IntStream.of(reservedData).anyMatch(x -> x == index)) {
+	    				  topLabel.setText("ì´ë¯¸ ì˜ˆì•½ëœ ìë¦¬ì…ë‹ˆë‹¤.");
+				          add(topLabel,BorderLayout.CENTER);
+		        		  setSize(250, 100);
+	    			  } else {
+		        		  topLabel.setText(number+" ë²ˆ ì¢Œì„ì„ ì˜ˆì•½í•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
+		        		  topLabel.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+			        	  
+				          yesbtn = new JButton("ë„¤");
+				          yesbtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+				          yesbtn.setForeground(Color.white);
+				          yesbtn.setBackground(new Color(135,77,162));
+				          yesbtn.addActionListener(this);
+				          yesbtn.setBorderPainted(false);
+				          
+				          noBtn = new JButton("ì•„ë‹ˆì˜¤");
+				          noBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
+				          noBtn.setForeground(Color.BLACK);
+				          noBtn.setBackground(Color.LIGHT_GRAY);
+				          noBtn.addActionListener(this);
+				          noBtn.setBorderPainted(false);
+				          
+				          topLabel.setBounds(60,30,200,20);
+				          yesbtn.setBounds(20,70,80,20);
+				          noBtn.setBounds(200,70,80,20);
+				          this.add(topLabel);
+				          this.add(yesbtn);
+				          this.add(noBtn);
+				          this.setUndecorated(true);
+	    			  }
 	        	  }
 	          } else if (btn[index].getStatus() == 1) {
-	        	  topLabel.setText(number+" ¹ø ÁÂ¼®À» ¿¹¾à Ãë¼ÒÇÏ½Ã°Ú½À´Ï±î?");
-	        	  topLabel.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+	        	  topLabel.setText(number+" ë²ˆ ì¢Œì„ì„ ì˜ˆì•½ ì·¨ì†Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
+	        	  topLabel.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 	        	  
-		          yesbtn = new JButton("³×");
-		          yesbtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+		          yesbtn = new JButton("ë„¤");
+		          yesbtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 		          yesbtn.setForeground(Color.white);
 		          yesbtn.setBackground(new Color(135,77,162));
 		          yesbtn.addActionListener(this);
 		          yesbtn.setBorderPainted(false);
 		          
-		          noBtn = new JButton("¾Æ´Ï¿À");
-		          noBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+		          noBtn = new JButton("ì•„ë‹ˆì˜¤");
+		          noBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 		          noBtn.setForeground(Color.BLACK);
 		          noBtn.setBackground(Color.LIGHT_GRAY);
 		          noBtn.addActionListener(this);
@@ -263,18 +253,18 @@ class SeatsPanel extends JPanel {
 		          this.setUndecorated(true);
 	          } else {
 	        	  if (isAdmin) {
-	        		  topLabel.setText(number+" ¹ø ÁÂ¼®À» ¿¹¾à Ãë¼ÒÇÏ½Ã°Ú½À´Ï±î?");
-		        	  topLabel.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 10));
+	        		  topLabel.setText(number+" ë²ˆ ì¢Œì„ì„ ì˜ˆì•½ ì·¨ì†Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
+		        	  topLabel.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 		        	  
-			          yesbtn = new JButton("³×");
-			          yesbtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+			          yesbtn = new JButton("ë„¤");
+			          yesbtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 			          yesbtn.setForeground(Color.white);
 			          yesbtn.setBackground(new Color(135,77,162));
 			          yesbtn.addActionListener(this);
 			          yesbtn.setBorderPainted(false);
 			          
-			          noBtn = new JButton("¾Æ´Ï¿À");
-			          noBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+			          noBtn = new JButton("ì•„ë‹ˆì˜¤");
+			          noBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 			          noBtn.setForeground(Color.BLACK);
 			          noBtn.setBackground(Color.LIGHT_GRAY);
 			          noBtn.addActionListener(this);
@@ -287,19 +277,12 @@ class SeatsPanel extends JPanel {
 			          this.add(yesbtn);
 			          this.add(noBtn);
 			          this.setUndecorated(true);
-//			          yesbtn = new JButton("³×");
-//			          yesbtn.addActionListener(this);
-//			          noBtn = new JButton("¾Æ´Ï¿À");
-//			          noBtn.addActionListener(this);
-//			          add(topLabel,BorderLayout.NORTH);
-//			          add(yesbtn,BorderLayout.WEST);
-//			          add(noBtn,BorderLayout.EAST);
 	        	  } else {
-	        		  topLabel.setText("ÀÌ¹Ì ÀÌ ¹æ¿¡ ¿¹¾àÇÑ ÀÚ¸®°¡ ÀÖ½À´Ï´Ù.");
-	        		  topLabel.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 10));
+	        		  topLabel.setText("ì´ë¯¸ ì´ ë°©ì— ì˜ˆì•½í•œ ìë¦¬ê°€ ìˆìŠµë‹ˆë‹¤.");
+	        		  topLabel.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 10));
 	        		  topLabel.setBounds(45,20,210,40);
-			          noBtn = new JButton("µ¹¾Æ°¡±â");
-			          noBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+			          noBtn = new JButton("ëŒì•„ê°€ê¸°");
+			          noBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 			          noBtn.setForeground(Color.BLACK);
 			          noBtn.setBackground(Color.LIGHT_GRAY);
 			          noBtn.addActionListener(this);
@@ -308,12 +291,8 @@ class SeatsPanel extends JPanel {
 			          this.add(topLabel);
 			          this.add(noBtn);
 			          this.setUndecorated(true);
-//	        		  topLabel.setText("ÀÌ¹Ì ¿¹¾àµÈ ÀÚ¸®ÀÔ´Ï´Ù.");
-//			          add(topLabel,BorderLayout.CENTER);
-//	        		  setSize(250, 100);
 	        	  }
 	          }
-	          this.setBackground(Color.white);
 	          setVisible(true);
 	         
 	          
@@ -328,21 +307,20 @@ class SeatsPanel extends JPanel {
 			          hc.postReserveRoom(this.roomNum, this.number);
 			          btn[index].setStatus(1);
 			          myReservedSeat = this.number;
-			          new ok("¿¹¾àÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
+			          new ok("ì˜ˆì•½ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 	    		  } else if (btn[index].getStatus() == 1) {
 //	    			  btn[index].addMouseListener(this);
-			          btn[index].setBackground(Color.blue);
+			          btn[index].setBackground(new Color(255,170,170));
 			          hc.deleteReserveRoom(this.roomNum, this.number);
 			          btn[index].setStatus(0);
 			          myReservedSeat = 0;
-			          new ok("¿¹¾àÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù.");
+			          new ok("ì˜ˆì•½ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 	    		  } else {
 	    			  if (isAdmin) {
-				          btn[index].setBackground(Color.blue);
+				          btn[index].setBackground(new Color(255,170,170));
 				          hc.deleteReserveRoom(this.roomNum, this.number);
 				          btn[index].setStatus(0);
-				          new ok("¿¹¾àÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù.");
-				          
+				          new ok("ì˜ˆì•½ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 	    			  }
 	    		  }
 	    		  
@@ -362,18 +340,16 @@ class SeatsPanel extends JPanel {
 	         JLabel lb;
 	         JButton okButton;
 	         public ok(String message) {
-	          setSize(300,120);
-//	          this.setBounds(100,100,30,30);
+	        	 setSize(300,120);
 //	          this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	          this.setLocationRelativeTo(null);
 	          
 	          setLayout(null);
 	          lb=new JLabel(message);
-	          lb.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+	          lb.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 	          lb.setBounds(85,20,130,20);
-//	          lb.setHorizontalAlignment(JLabel.CENTER);
-	          okButton=new JButton("È®ÀÎ");
-	          okButton.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 12));
+	          okButton=new JButton("í™•ì¸");
+	          okButton.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 12));
 	          okButton.setForeground(Color.BLACK);
 	          okButton.setBackground(Color.LIGHT_GRAY);
 	          okButton.setBorderPainted(false);
@@ -390,6 +366,7 @@ class SeatsPanel extends JPanel {
 	          add(okButton);
 	          add(lb);
 	          setUndecorated(true);
+	          
 	          
 	          setVisible(true);
 	         }

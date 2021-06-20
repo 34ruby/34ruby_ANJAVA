@@ -24,59 +24,59 @@ public class HttpCaller {
 	// logIn = url+"users/"+{userId}
 	// room = url+"room/"
 	
-	private String id = "";  // »ç¿ëÀÚÀÇ id°¡ ÀúÀåµË´Ï´Ù.
-	private String token = "";  // »ç¿ëÀÚÀÇ ÅäÅ«(½Äº°ÀÚ)ÀÌ ÀúÀåµË´Ï´Ù.
-	private String name = null;  // »ç¿ëÀÚÀÇ ÀÌ¸§ÀÌ ÀúÀåµË´Ï´Ù.
-	private boolean isAdmin = false;  // »ç¿ëÀÚÀÇ °ü¸®ÀÚ ¿©ºÎ°¡ ÀúÀåµË´Ï´Ù.
-	private int yjuNum = 0;  // »ç¿ëÀÚÀÇ ÇĞ¹øÀÌ ÀúÀåµË´Ï´Ù.
-	private String email = null;  // »ç¿ëÀÚÀÇ ÀÌ¸ŞÀÏÀÌ ÀúÀåµË´Ï´Ù.
-	private JSONArray reservedRooms = null;  // »ç¿ëÀÚ°¡ ¿¹¾àÇÑ ¹æ ¸ñ·ÏÀÌ ÀúÀåµË´Ï´Ù.
+	private String id = "";  // ì‚¬ìš©ìì˜ idê°€ ì €ì¥ë©ë‹ˆë‹¤.
+	private String token = "";  // ì‚¬ìš©ìì˜ í† í°(ì‹ë³„ì)ì´ ì €ì¥ë©ë‹ˆë‹¤.
+	private String name = null;  // ì‚¬ìš©ìì˜ ì´ë¦„ì´ ì €ì¥ë©ë‹ˆë‹¤.
+	private boolean isAdmin = false;  // ì‚¬ìš©ìì˜ ê´€ë¦¬ì ì—¬ë¶€ê°€ ì €ì¥ë©ë‹ˆë‹¤.
+	private int yjuNum = 0;  // ì‚¬ìš©ìì˜ í•™ë²ˆì´ ì €ì¥ë©ë‹ˆë‹¤.
+	private String email = null;  // ì‚¬ìš©ìì˜ ì´ë©”ì¼ì´ ì €ì¥ë©ë‹ˆë‹¤.
+	private JSONArray reservedRooms = null;  // ì‚¬ìš©ìê°€ ì˜ˆì•½í•œ ë°© ëª©ë¡ì´ ì €ì¥ë©ë‹ˆë‹¤.
 	
-	private boolean isSuccessful = false;  // ¿äÃ»ÀÌ ¼öÇàµÉ ¶§ ¸¶´Ù ¼º°øÀûÀ¸·Î ÀÀ´äÀ» ¼ö½ÅÇÏ¿´´ÂÁö ÀúÀåµË´Ï´Ù.
+	private boolean isSuccessful = false;  // ìš”ì²­ì´ ìˆ˜í–‰ë  ë•Œ ë§ˆë‹¤ ì„±ê³µì ìœ¼ë¡œ ì‘ë‹µì„ ìˆ˜ì‹ í•˜ì˜€ëŠ”ì§€ ì €ì¥ë©ë‹ˆë‹¤.
 	
 	private String request(String type, String requestURL, String jsonMessage) {
 		try{
-			OkHttpClient client = new OkHttpClient();  // OkHttpClient °´Ã¼¸¦ »ı¼ºÇÕ´Ï´Ù.
+			OkHttpClient client = new OkHttpClient();  // OkHttpClient ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 			
-			Request request;  // ¿äÃ» °´Ã¼¸¦ ¼±¾ğÇÕ´Ï´Ù.
-			switch (type) {  // ÀÎÀÚ·Î ¹ŞÀº type º¯¼öÀÇ °ª¿¡ µû¶ó get, post, delete, patchÀÇ Çü½Äº°·Î ¿äÃ» °´Ã¼¸¦ Á¤ÀÇÇÕ´Ï´Ù.
+			Request request;  // ìš”ì²­ ê°ì²´ë¥¼ ì„ ì–¸í•©ë‹ˆë‹¤.
+			switch (type) {  // ì¸ìë¡œ ë°›ì€ type ë³€ìˆ˜ì˜ ê°’ì— ë”°ë¼ get, post, delete, patchì˜ í˜•ì‹ë³„ë¡œ ìš”ì²­ ê°ì²´ë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
 			case "POST":
 				request = new Request.Builder()
-				.addHeader("Authorization", token)  // Çì´õ¸¦ Ãß°¡ÇÕ´Ï´Ù. (Çì´õÀÌ¸§, °ª)
-				.url(requestURL)  // ¿äÃ» urlÀ» Ãß°¡ÇÕ´Ï´Ù.
-				.post(RequestBody.create(jsonMessage, MediaType.parse("application/json; charset=utf-8"))) //POST·Î ¿äÃ»ÇÕ´Ï´Ù.
-				.build();  // ¿äÃ»À» ÀÛ¼ºÇÕ´Ï´Ù.
+				.addHeader("Authorization", token)  // í—¤ë”ë¥¼ ì¶”ê°€í•©ë‹ˆë‹¤. (í—¤ë”ì´ë¦„, ê°’)
+				.url(requestURL)  // ìš”ì²­ urlì„ ì¶”ê°€í•©ë‹ˆë‹¤.
+				.post(RequestBody.create(jsonMessage, MediaType.parse("application/json; charset=utf-8"))) //POSTë¡œ ìš”ì²­í•©ë‹ˆë‹¤.
+				.build();  // ìš”ì²­ì„ ì‘ì„±í•©ë‹ˆë‹¤.
 				break;
 			case "DELETE":
 				request = new Request.Builder()
 				.addHeader("Authorization", token)
 				.url(requestURL)
-				.delete() //DELETE·Î ¿äÃ»ÇÕ´Ï´Ù.
+				.delete() //DELETEë¡œ ìš”ì²­í•©ë‹ˆë‹¤.
 				.build();
 				break;
 			case "PATCH":
 				request = new Request.Builder()
 				.addHeader("Authorization", token)
 				.url(requestURL)
-				.patch(RequestBody.create(jsonMessage, MediaType.parse("application/json; charset=utf-8"))) //PATCH·Î ¿äÃ»ÇÕ´Ï´Ù.
+				.patch(RequestBody.create(jsonMessage, MediaType.parse("application/json; charset=utf-8"))) //PATCHë¡œ ìš”ì²­í•©ë‹ˆë‹¤.
 				.build();
 				break;
-			default: //GET·Î ¿äÃ»ÇÕ´Ï´Ù.
+			default: //GETë¡œ ìš”ì²­í•©ë‹ˆë‹¤.
 				request = new Request.Builder()
 				.addHeader("Authorization", token)
 				.url(requestURL)
 				.build();
 				break;
 			}
-                        //µ¿±â Ã³¸®½Ã executeÇÔ¼ö »ç¿ë
-			Response response = client.newCall(request).execute();  // OkhttpClient °´Ã¼·Î ÀÛ¼ºÇÑ ¿äÃ»°´Ã¼¸¦ µ¿±â½ÄÀ¸·Î ¼­¹ö¿¡ º¸³½ µÚ µ¹¾Æ¿Â ÀÀ´äÀ» ÀúÀåÇÕ´Ï´Ù.
+                        //ë™ê¸° ì²˜ë¦¬ì‹œ executeí•¨ìˆ˜ ì‚¬ìš©
+			Response response = client.newCall(request).execute();  // OkhttpClient ê°ì²´ë¡œ ì‘ì„±í•œ ìš”ì²­ê°ì²´ë¥¼ ë™ê¸°ì‹ìœ¼ë¡œ ì„œë²„ì— ë³´ë‚¸ ë’¤ ëŒì•„ì˜¨ ì‘ë‹µì„ ì €ì¥í•©ë‹ˆë‹¤.
 			
-			this.isSuccessful = response.isSuccessful();  // ÀÀ´äÀÌ ¼º°øÀûÀ¸·Î ¼ö½ÅµÇ¾ú´ÂÁö¸¦ ÇÊµå º¯¼ö¿¡ ÀúÀåÇÕ´Ï´Ù.
+			this.isSuccessful = response.isSuccessful();  // ì‘ë‹µì´ ì„±ê³µì ìœ¼ë¡œ ìˆ˜ì‹ ë˜ì—ˆëŠ”ì§€ë¥¼ í•„ë“œ ë³€ìˆ˜ì— ì €ì¥í•©ë‹ˆë‹¤.
 
-			//Ãâ·Â
-			String message = response.body().string();  // jsonÇü½ÄÀ¸·Î µ¹¾Æ¿Â ÀÀ´äÀ» stringÇü½ÄÀ¸·Î ÀúÀåÇÕ´Ï´Ù.
+			//ì¶œë ¥
+			String message = response.body().string();  // jsoní˜•ì‹ìœ¼ë¡œ ëŒì•„ì˜¨ ì‘ë‹µì„ stringí˜•ì‹ìœ¼ë¡œ ì €ì¥í•©ë‹ˆë‹¤.
 			
-			return message;  // string Çü½ÄÀ¸·Î ÀúÀåÇÑ ÀÀ´äÀ» ¹İÈ¯ÇÕ´Ï´Ù.
+			return message;  // string í˜•ì‹ìœ¼ë¡œ ì €ì¥í•œ ì‘ë‹µì„ ë°˜í™˜í•©ë‹ˆë‹¤.
 
 		} catch (Exception e) {
 			System.err.println(e.toString());
@@ -85,11 +85,11 @@ public class HttpCaller {
 		}
 	}
 	/**
-	 * ÇöÀç »ç¿ëÀÚÀÇ Á¤º¸¸¦ ¿äÃ»ÇÕ´Ï´Ù.<br>
-	 * @return ÇöÀç »ç¿ëÀÚÀÇ Á¤º¸°¡ ´ã±ä JSON °´Ã¼¿¡ ´ëÇÑ String µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ì‚¬ìš©ìì˜ ì •ë³´ë¥¼ ìš”ì²­í•©ë‹ˆë‹¤.<br>
+	 * @return í˜„ì¬ ì‚¬ìš©ìì˜ ì •ë³´ê°€ ë‹´ê¸´ JSON ê°ì²´ì— ëŒ€í•œ String ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 * <pre>
 	 * {
-  "message": "{userId}´ÔÀÇ Á¤º¸ ÀÔ´Ï´Ù.",
+  "message": "{userId}ë‹˜ì˜ ì •ë³´ ì…ë‹ˆë‹¤.",
   "data": {
     "isAdmin": boolean,
     "userId": "userId",
@@ -100,7 +100,7 @@ public class HttpCaller {
       {
         "sitNum": 1,
         "roomNum": 1,
-        "reserveDate": "ISO 8601Çü½ÄÀÇ StringÀÔ´Ï´Ù. TimezoneÀº UTC 0ÀÎ ZÀÔ´Ï´Ù."
+        "reserveDate": "ISO 8601í˜•ì‹ì˜ Stringì…ë‹ˆë‹¤. Timezoneì€ UTC 0ì¸ Zì…ë‹ˆë‹¤."
       },
       {
         "sitNum": 99,
@@ -112,17 +112,17 @@ public class HttpCaller {
 }
 	 * </pre>
 	 */
-	public String getUserDetail() {  // ÇöÀç »ç¿ëÀÚÀÇ »ó¼¼Á¤º¸¸¦ ¿äÃ»
+	public String getUserDetail() {  // í˜„ì¬ ì‚¬ìš©ìì˜ ìƒì„¸ì •ë³´ë¥¼ ìš”ì²­
 		return this.request("GET", url+"users/"+this.id, null);
 	}
 	/**
-	 * Æ¯Á¤ »ç¿ëÀÚÀÇ Á¤º¸¸¦ Á¶È¸ÇÕ´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param userId ´Â Á¶È¸ÇÒ »ç¿ëÀÚÀÇ IDÀÔ´Ï´Ù.
-	 * @return ¸Å°³º¯¼ö userID ¶ó´Â IDÀÇ »ç¿ëÀÚ Á¤º¸°¡ ´ã±ä JSON °´Ã¼¿¡ ´ëÇÑ String µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	 * íŠ¹ì • ì‚¬ìš©ìì˜ ì •ë³´ë¥¼ ì¡°íšŒí•©ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param userId ëŠ” ì¡°íšŒí•  ì‚¬ìš©ìì˜ IDì…ë‹ˆë‹¤.
+	 * @return ë§¤ê°œë³€ìˆ˜ userID ë¼ëŠ” IDì˜ ì‚¬ìš©ì ì •ë³´ê°€ ë‹´ê¸´ JSON ê°ì²´ì— ëŒ€í•œ String ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 * <pre>
 	 * {
-  "message": "{userId}´ÔÀÇ Á¤º¸ ÀÔ´Ï´Ù.",
+  "message": "{userId}ë‹˜ì˜ ì •ë³´ ì…ë‹ˆë‹¤.",
   "data": {
     "isAdmin": boolean,
     "userId": "userId",
@@ -133,7 +133,7 @@ public class HttpCaller {
       {
         "sitNum": 1,
         "roomNum": 1,
-        "reserveDate": "ISO 8601Çü½ÄÀÇ StringÀÔ´Ï´Ù. TimezoneÀº UTC 0ÀÎ ZÀÔ´Ï´Ù."
+        "reserveDate": "ISO 8601í˜•ì‹ì˜ Stringì…ë‹ˆë‹¤. Timezoneì€ UTC 0ì¸ Zì…ë‹ˆë‹¤."
       },
       {
         "sitNum": 99,
@@ -145,16 +145,16 @@ public class HttpCaller {
 }
 	 * </pre>
 	 */
-	public String getUserDetail(String userId) {  // Æ¯Á¤ »ç¿ëÀÚÀÇ »ó¼¼Á¤º¸¸¦ ¿äÃ»
+	public String getUserDetail(String userId) {  // íŠ¹ì • ì‚¬ìš©ìì˜ ìƒì„¸ì •ë³´ë¥¼ ìš”ì²­
 		return this.request("GET", url+"users/"+userId, null);
 	}
 	/**
-	 * Æ¯Á¤ ¹æÀÇ »ó¼¼ÇÑ Á¤º¸¸¦ Á¶È¸ÇÕ´Ï´Ù.<br>
-	 * @param roomNum Àº Á¶È¸ÇÒ ¹æÀÇ È£¼öÀÔ´Ï´Ù.
-	 * @return ¸Å°³º¯¼ö roomNum ÀÌ¶ó´Â È£¼öÀÇ ¹æ Á¤º¸°¡ ´ã±ä JSON °´Ã¼¿¡ ´ëÇÑ String µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	 * íŠ¹ì • ë°©ì˜ ìƒì„¸í•œ ì •ë³´ë¥¼ ì¡°íšŒí•©ë‹ˆë‹¤.<br>
+	 * @param roomNum ì€ ì¡°íšŒí•  ë°©ì˜ í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @return ë§¤ê°œë³€ìˆ˜ roomNum ì´ë¼ëŠ” í˜¸ìˆ˜ì˜ ë°© ì •ë³´ê°€ ë‹´ê¸´ JSON ê°ì²´ì— ëŒ€í•œ String ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 * <pre>
 	 * {
-  "message": "{roomNum} ¹æÀÇ Á¤º¸",
+  "message": "{roomNum} ë°©ì˜ ì •ë³´",
   "data": {
     "roomData": {
       "row": 10,
@@ -168,29 +168,29 @@ public class HttpCaller {
         8
       ],
       "resetDate": "",
-      "reservedData": { // sitNum ¿À¸§Â÷¼øÀ¸·Î Á¤·ÄÇÕ´Ï´Ù.
+      "reservedData": { // sitNum ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ì •ë ¬í•©ë‹ˆë‹¤.
         "16": "aio",
-        "19": "forbidden" // ¿¹¾àÀÌ ±İÁöµÈ ÁÂ¼®ÀÔ´Ï´Ù.
+        "19": "forbidden" // ì˜ˆì•½ì´ ê¸ˆì§€ëœ ì¢Œì„ì…ë‹ˆë‹¤.
       }
     }
   }
 }
 	 * </pre>
 	 */
-	public String getOneRoom(int roomNum) {  // Æ¯Á¤ ¹æÀÇ Á¤º¸¸¦ ¿äÃ»
+	public String getOneRoom(int roomNum) {  // íŠ¹ì • ë°©ì˜ ì •ë³´ë¥¼ ìš”ì²­
 		return this.request("GET", url+"room/"+String.valueOf(roomNum), null);
 	}
 	/**
-	 * ¸ğµç ¹æ¿¡ ´ëÇÑ Á¤º¸¸¦ Á¶È¸ÇÕ´Ï´Ù.<br>
-	 * @return ¸ğµç ¹æÀÇ ´ë·«ÀûÀÎ Á¤º¸°¡ ´ã±ä JSON °´Ã¼¿¡ ´ëÇÑ String µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	 * ëª¨ë“  ë°©ì— ëŒ€í•œ ì •ë³´ë¥¼ ì¡°íšŒí•©ë‹ˆë‹¤.<br>
+	 * @return ëª¨ë“  ë°©ì˜ ëŒ€ëµì ì¸ ì •ë³´ê°€ ë‹´ê¸´ JSON ê°ì²´ì— ëŒ€í•œ String ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 * <pre>{
-  "message": "¸ğµç ¹æ ¸®½ºÆ®ÀÔ´Ï´Ù.",
+  "message": "ëª¨ë“  ë°© ë¦¬ìŠ¤íŠ¸ì…ë‹ˆë‹¤.",
   "data": {
     "roomsData": [
       {
         "roomNum": 202,
         "maxSit": 80,
-        "resetDate": "ISO 8601 // Á¸ÀçÇÏÁö ¾Ê´Ù¸é ¿äÃ» °á°ú¿¡ Ç¥±âµÇÁö ¾Ê½À´Ï´Ù."
+        "resetDate": "ISO 8601 // ì¡´ì¬í•˜ì§€ ì•Šë‹¤ë©´ ìš”ì²­ ê²°ê³¼ì— í‘œê¸°ë˜ì§€ ì•ŠìŠµë‹ˆë‹¤."
       },
       {
         "roomNum": 203,
@@ -200,26 +200,26 @@ public class HttpCaller {
   }
 }</pre>
 	 */
-	public String getAllRoom() {  // ÀüÃ¼ ¹æÀÇ Á¤º¸¸¦ ¿äÃ»
+	public String getAllRoom() {  // ì „ì²´ ë°©ì˜ ì •ë³´ë¥¼ ìš”ì²­
 		return this.request("GET", url+"room/", null);
 	}
 	/**
-	 * »õ·Î¿î À¯Àú¸¦ µî·ÏÇÕ´Ï´Ù.<br>
-	 * @param id ´Â µî·Ï½Ã »ç¿ëÇÒ IDÀÔ´Ï´Ù.
-	 * @param pw ´Â µî·Ï½Ã »ç¿ëÇÒ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.
-	 * @param name ´Â µî·Ï½Ã »ç¿ëÇÒ ÀÌ¸§ÀÔ´Ï´Ù.
-	 * @param yNum ´Â µî·Ï½Ã »ç¿ëÇÒ ÇĞ¹øÀÔ´Ï´Ù.
-	 * @param email ´Â µî·Ï½Ã »ç¿ëÇÒ ÀÌ¸ŞÀÏ ÁÖ¼ÒÀÔ´Ï´Ù.
-	 * @return È¸¿ø °¡ÀÔ½Ã ±âÀÔÇÑ Á¤º¸µéÀÌ ´ã±ä JSON °´Ã¼¿¡ ´ëÇÑ String µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÕ´Ï´Ù. ¿À·ù ¹ß»ı½Ã ¿À·ù ¸Ş½ÃÁö¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	 * ìƒˆë¡œìš´ ìœ ì €ë¥¼ ë“±ë¡í•©ë‹ˆë‹¤.<br>
+	 * @param id ëŠ” ë“±ë¡ì‹œ ì‚¬ìš©í•  IDì…ë‹ˆë‹¤.
+	 * @param pw ëŠ” ë“±ë¡ì‹œ ì‚¬ìš©í•  ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @param name ëŠ” ë“±ë¡ì‹œ ì‚¬ìš©í•  ì´ë¦„ì…ë‹ˆë‹¤.
+	 * @param yNum ëŠ” ë“±ë¡ì‹œ ì‚¬ìš©í•  í•™ë²ˆì…ë‹ˆë‹¤.
+	 * @param email ëŠ” ë“±ë¡ì‹œ ì‚¬ìš©í•  ì´ë©”ì¼ ì£¼ì†Œì…ë‹ˆë‹¤.
+	 * @return íšŒì› ê°€ì…ì‹œ ê¸°ì…í•œ ì •ë³´ë“¤ì´ ë‹´ê¸´ JSON ê°ì²´ì— ëŒ€í•œ String ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤. ì˜¤ë¥˜ ë°œìƒì‹œ ì˜¤ë¥˜ ë©”ì‹œì§€ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 * <pre>{
-    "userId":"userÀÇ ¾ÆÀÌµğ" // uniuqe ,
-    "password":"ºñ¹Ğ¹øÈ£" // min 8,
-    "name":"ÇÑ±Û ¼ºÇÔ" ,
-    "yjuNum":"ÇĞ»ı¹øÈ£" // unique 7ÀÚ¸®ÀÇ ¼ıÀÚÇü½Ä,
-    "email":"ÀÌ¸ŞÀÏ" // unique  email Çü½ÄÀÌ¿©¾ß ÇÕ´Ï´Ù.
+    "userId":"userì˜ ì•„ì´ë””" // uniuqe ,
+    "password":"ë¹„ë°€ë²ˆí˜¸" // min 8,
+    "name":"í•œê¸€ ì„±í•¨" ,
+    "yjuNum":"í•™ìƒë²ˆí˜¸" // unique 7ìë¦¬ì˜ ìˆ«ìí˜•ì‹,
+    "email":"ì´ë©”ì¼" // unique  email í˜•ì‹ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.
 }</pre>
 	 */
-	public String postSign(String id, char[] pw, String name, int yNum, String email) {  // È¸¿ø°¡ÀÔÀ» ¿äÃ»
+	public String postSign(String id, char[] pw, String name, int yNum, String email) {  // íšŒì›ê°€ì…ì„ ìš”ì²­
 		JSONObject jo = new JSONObject();
 		String password = "";
 		for (char a : pw) password += a;
@@ -231,19 +231,19 @@ public class HttpCaller {
 		return this.request("POST", url+"users/sign/", jo.toString());
 	}
 	/**
-	 * ·Î±×ÀÎ ÇÕ´Ï´Ù.<br>
-	 * @param id ´Â ·Î±×ÀÎÇÒ ¾ÆÀÌµğÀÔ´Ï´Ù.
-	 * @param pw ´Â ·Î±×ÀÎÇÒ °èÁ¤¿¡ ´ëÇÑ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö¿Í ÇÔ²² ÅäÅ«°ú °ü¸®ÀÚ ¿©ºÎ°¡ Á¤º¸°¡ ´ã±ä JSON °´Ã¼¿¡ ´ëÇÑ String µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+	 * ë¡œê·¸ì¸ í•©ë‹ˆë‹¤.<br>
+	 * @param id ëŠ” ë¡œê·¸ì¸í•  ì•„ì´ë””ì…ë‹ˆë‹¤.
+	 * @param pw ëŠ” ë¡œê·¸ì¸í•  ê³„ì •ì— ëŒ€í•œ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ì™€ í•¨ê»˜ í† í°ê³¼ ê´€ë¦¬ì ì—¬ë¶€ê°€ ì •ë³´ê°€ ë‹´ê¸´ JSON ê°ì²´ì— ëŒ€í•œ String ë°ì´í„°ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 * <pre>{
-  "message": "userId´Ô ·Î±×ÀÎ ¼º°ø",
+  "message": "userIdë‹˜ ë¡œê·¸ì¸ ì„±ê³µ",
   "data": {
-    "token": "jwt stringÀÔ´Ï´Ù.",
+    "token": "jwt stringì…ë‹ˆë‹¤.",
     "isAdmin": boolean
   }
 }</pre>
 	 */
-	public String postLogIn(String id, char[] pw) {  // ·Î±×ÀÎÀ» ¿äÃ» (·Î±×ÀÎ ¼º°ø½Ã »ç¿ëÀÚ Á¤º¸¸¦ ÇÊµåº¯¼ö¿¡ ÀúÀå)
+	public String postLogIn(String id, char[] pw) {  // ë¡œê·¸ì¸ì„ ìš”ì²­ (ë¡œê·¸ì¸ ì„±ê³µì‹œ ì‚¬ìš©ì ì •ë³´ë¥¼ í•„ë“œë³€ìˆ˜ì— ì €ì¥)
 		String password = "";
 		for (char a : pw) password += a;
 		String result = this.request("POST", url+"users/", "{\"userId\":\""+id+"\",\"password\":\""+password+"\"}");
@@ -262,17 +262,17 @@ public class HttpCaller {
 		return result;
 	}
 	/**
-	 * »õ·Î¿î RoomÀ» ¸¸µì´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param roomNum Àº »õ·Î ¸¸µé ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @param col Àº ÁÂ¼® ¿­°¹¼ö ÀÔ´Ï´Ù.
-	 * @param row ´Â ÁÂ¼® Çà°¹¼ö ÀÔ´Ï´Ù.
-	 * @param colBlank Àº ¶ç¿ï ¿­¹øÈ£ÀÔ´Ï´Ù. ¶ç¿ìÁö ¾ÊÀ¸·Á¸é nullÀ» ÀÔ·ÂÇÏ¼¼¿ä.
-	 * @param rowBlank Àº ¶ç¿ï Çà¹øÈ£ÀÔ´Ï´Ù. ¶ç¿ìÁö ¾ÊÀ¸·Á¸é nullÀ» ÀÔ·ÂÇÏ¼¼¿ä.
+	 * ìƒˆë¡œìš´ Roomì„ ë§Œë“­ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param roomNum ì€ ìƒˆë¡œ ë§Œë“¤ ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param col ì€ ì¢Œì„ ì—´ê°¯ìˆ˜ ì…ë‹ˆë‹¤.
+	 * @param row ëŠ” ì¢Œì„ í–‰ê°¯ìˆ˜ ì…ë‹ˆë‹¤.
+	 * @param colBlank ì€ ë„ìš¸ ì—´ë²ˆí˜¸ì…ë‹ˆë‹¤. ë„ìš°ì§€ ì•Šìœ¼ë ¤ë©´ nullì„ ì…ë ¥í•˜ì„¸ìš”.
+	 * @param rowBlank ì€ ë„ìš¸ í–‰ë²ˆí˜¸ì…ë‹ˆë‹¤. ë„ìš°ì§€ ì•Šìœ¼ë ¤ë©´ nullì„ ì…ë ¥í•˜ì„¸ìš”.
 	 * @return <pre>{
-    "roomNum": ¹æÀÇ ¹øÈ£ int,
-    "column": ¼¼·ÎÁÙ int,
-    "row": °¡·ÎÁÙ int,
+    "roomNum": ë°©ì˜ ë²ˆí˜¸ int,
+    "column": ì„¸ë¡œì¤„ int,
+    "row": ê°€ë¡œì¤„ int,
     "rowBlankLine": [
         1
     ],
@@ -283,9 +283,8 @@ public class HttpCaller {
     ]
 }</pre>
 	 */
-	public String postCreateRoom(int roomNum, int col, int row, int[] colBlank, int[] rowBlank) {  // ¹æÀ» »ı¼ºÇÏ´Â ¿äÃ»
+	public String postCreateRoom(int roomNum, int col, int row, int[] colBlank, int[] rowBlank) {  // ë°©ì„ ìƒì„±í•˜ëŠ” ìš”ì²­
 		JSONObject jo = new JSONObject();
-		
 		jo.put("roomNum", roomNum);
 		jo.put("column", col);
 		jo.put("row", row);
@@ -296,16 +295,52 @@ public class HttpCaller {
 		System.out.println(jo.toString());
 		return this.request("POST", url+"room/", jo.toString());
 	}
+	
+	public String postCreateRoom(RoomCreator rc) {  // ë°©ì„ ìƒì„±í•˜ëŠ” ìš”ì²­
+		JSONObject jo = new JSONObject();
+	      SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+	      
+	      
+	      if (rc.getRoomNum() != 99999)
+	      jo.put("roomNum", rc.getRoomNum());
+	      if (rc.getCol() != 99)
+	      jo.put("column", rc.getCol());
+	      if (rc.getRow() != 99)
+	      jo.put("row", rc.getRow());
+	      if (rc.getRowBlank() != null)
+	         jo.put("rowBlankLine", rc.getRowBlank());
+	      if (rc.getColBlank() != null)
+	         jo.put("columnBlankLine", rc.getColBlank());
+	      if (rc.getResetDate() != null)
+	         jo.put("resetDate", df.format(rc.getResetDate()));
+	      if (rc.getAcceptDate() != null)
+	         jo.put("acceptDate", df.format(rc.getAcceptDate()));
+	      if (rc.getMeasure() == 0) {
+	         jo.put("measure", rc.getMeasure());
+	         jo.put("weekendInterval", rc.getWeekendInterval());
+	      }
+	      if (rc.getMeasure() == 1) {
+	         jo.put("measure", rc.getMeasure());
+	         jo.put("day", rc.getDay());
+	         jo.put("weekNth", rc.getWeekNth());
+	      }
+	      if (rc.getOpenDeffer() != 9999)
+	      jo.put("openDeffer", rc.getOpenDeffer());
+	      
+	      jo.put("isShuffle", rc.isShuffle());
+	      System.out.println(jo.toString());
+	      return this.request("POST", url+"room/", jo.toString());
+	}
 	/**
-	 * »õ·Î¿î RoomÀ» ¸¸µì´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param roomNum Àº »õ·Î ¸¸µé ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @param col Àº ÁÂ¼® ¿­°¹¼ö ÀÔ´Ï´Ù.
-	 * @param row ´Â ÁÂ¼® Çà°¹¼ö ÀÔ´Ï´Ù.
+	 * ìƒˆë¡œìš´ Roomì„ ë§Œë“­ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param roomNum ì€ ìƒˆë¡œ ë§Œë“¤ ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param col ì€ ì¢Œì„ ì—´ê°¯ìˆ˜ ì…ë‹ˆë‹¤.
+	 * @param row ëŠ” ì¢Œì„ í–‰ê°¯ìˆ˜ ì…ë‹ˆë‹¤.
 	 * @return <pre>{
-    "roomNum": ¹æÀÇ ¹øÈ£ int,
-    "column": ¼¼·ÎÁÙ int,
-    "row": °¡·ÎÁÙ int,
+    "roomNum": ë°©ì˜ ë²ˆí˜¸ int,
+    "column": ì„¸ë¡œì¤„ int,
+    "row": ê°€ë¡œì¤„ int,
     "rowBlankLine": [
         1
     ],
@@ -316,7 +351,7 @@ public class HttpCaller {
     ]
 }</pre>
 	 */
-	public String postCreateRoom(int roomNum, int col, int row) {  // ¹æÀ» »ı¼ºÇÏ´Â ¿äÃ»
+	public String postCreateRoom(int roomNum, int col, int row) {  // ë°©ì„ ìƒì„±í•˜ëŠ” ìš”ì²­
 		JSONObject jo = new JSONObject();
 		
 		jo.put("roomNum", roomNum);
@@ -325,12 +360,12 @@ public class HttpCaller {
 		return this.request("POST", url+"room/", jo.toString());
 	}
 	/**
-	 * roomNum¹ø ¹æÀÇ Æ¯Á¤ ÁÂ¼®À» ¿¹¾àÇÕ´Ï´Ù.<br>
-	 * @param roomNum Àº ÁÂ¼®À» ¿¹¾àÇÒ ¹æÀÇ È£¼öÀÔ´Ï´Ù.
-	 * @param sitNum Àº ¿¹¾àÇÒ ÁÂ¼® ¹øÈ£ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * roomNumë²ˆ ë°©ì˜ íŠ¹ì • ì¢Œì„ì„ ì˜ˆì•½í•©ë‹ˆë‹¤.<br>
+	 * @param roomNum ì€ ì¢Œì„ì„ ì˜ˆì•½í•  ë°©ì˜ í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param sitNum ì€ ì˜ˆì•½í•  ì¢Œì„ ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
-	public String postReserveRoom(int roomNum, int sitNum) {  // ÀÚ¸®¸¦ ¿¹¾àÇÏ´Â ¿äÃ»
+	public String postReserveRoom(int roomNum, int sitNum) {  // ìë¦¬ë¥¼ ì˜ˆì•½í•˜ëŠ” ìš”ì²­
 		JSONObject jo = new JSONObject();
 		
 		jo.put("sitNum", sitNum);
@@ -338,44 +373,127 @@ public class HttpCaller {
 		return this.request("POST", url+"room/"+roomNum+"/reserve", jo.toString());
 	}
 	/**
-	 * Æ¯Á¤ »ç¿ëÀÚ¸¦ roomNum¹ø ¹æÀÇ Æ¯Á¤ ÁÂ¼®¿¡ ¿¹¾à½ÃÅµ´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param userId ´Â ¿¹¾à½ÃÅ³ »ç¿ëÀÚ ¾ÆÀÌµğÀÔ´Ï´Ù.
-	 * @param roomNum Àº ÁÂ¼®À» ¿¹¾àÇÒ ¹æÀÇ È£¼öÀÔ´Ï´Ù.
-	 * @param sitNum Àº ¿¹¾àÇÒ ÁÂ¼® ¹øÈ£ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * íŠ¹ì • ì‚¬ìš©ìë¥¼ roomNumë²ˆ ë°©ì˜ íŠ¹ì • ì¢Œì„ì— ì˜ˆì•½ì‹œí‚µë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param userId ëŠ” ì˜ˆì•½ì‹œí‚¬ ì‚¬ìš©ì ì•„ì´ë””ì…ë‹ˆë‹¤.
+	 * @param roomNum ì€ ì¢Œì„ì„ ì˜ˆì•½í•  ë°©ì˜ í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param sitNum ì€ ì˜ˆì•½í•  ì¢Œì„ ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
-	public String postReserveRoom(String userId, int roomNum, int sitNum) {  // ÀÚ¸®¸¦ ¿¹¾àÇÏ´Â ¿äÃ»
+	public String postReserveRoom(String userId, int roomNum, int sitNum) {  // ìë¦¬ë¥¼ ì˜ˆì•½í•˜ëŠ” ìš”ì²­
 		JSONObject jo = new JSONObject();
 		jo.put("userId", userId);
 		jo.put("sitNum", sitNum);
 		
 		return this.request("POST", url+"room/"+roomNum+"/reserve", jo.toString());
 	}
+	
+	public String patchResetRoomIntervalWeek(int roomNum, int weekendInterval, int openDeffer) {  // íŠ¹ì • ë°©ì˜ ì˜ˆì•½ì´ ê°€ëŠ¥í•´ì§€ëŠ” ì‹œê°„ì„ ì„¤ì •í•˜ëŠ” ìš”ì²­
+		JSONObject jo = new JSONObject();
+		jo.put("measure", 0);
+		jo.put("weekendInterval", weekendInterval);
+		jo.put("openDeffer", openDeffer);
+		return this.request("PATCH", url+"room/"+roomNum, jo.toString());
+	}
+	
+	public String patchOneRoom(RoomCreator rc) {
+		JSONObject jo = new JSONObject();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		if (rc.getCol() != 99)
+			jo.put("column", rc.getCol());
+		if (rc.getRow() != 99)
+			jo.put("row", rc.getRow());
+		if (rc.getRowBlank() != null)
+			jo.put("rowBlankLine", rc.getRowBlank());
+		if (rc.getColBlank() != null)
+			jo.put("columnBlankLine", rc.getColBlank());
+		
+		jo.put("resetDate", df.format(rc.getResetDate()));
+		jo.put("acceptDate", df.format(rc.getAcceptDate()));
+		
+		if (rc.getMeasure() == 0) {
+			jo.put("measure", rc.getMeasure());
+			jo.put("weekendInterval", rc.getWeekendInterval());
+		}
+		if (rc.getMeasure() == 1) {
+			jo.put("measure", rc.getMeasure());
+			jo.put("day", rc.getDay());
+			jo.put("weekNth", rc.getWeekNth());
+		}
+		if (rc.getMeasure() == -1) {
+			jo.put("measure", rc.getMeasure());
+		}
+	    if (rc.getOpenDeffer() != 9999) {
+	    	jo.put("openDeffer", rc.getOpenDeffer());
+	    }
+		jo.put("isShuffle", rc.isShuffle());
+
+		return this.request("PATCH", url+"room/"+rc.getRoomNum(), jo.toString());
+	}
+	
+	public String patchResetRoomIntervalDay(int roomNum, int day, int weekNth, int openDeffer) {  // íŠ¹ì • ë°©ì˜ ì˜ˆì•½ì´ ê°€ëŠ¥í•´ì§€ëŠ” ì‹œê°„ì„ ì„¤ì •í•˜ëŠ” ìš”ì²­
+		JSONObject jo = new JSONObject();
+		jo.put("measure", 1);
+		jo.put("day", day);
+		jo.put("weekNth", weekNth);
+		jo.put("openDeffer", openDeffer);
+		return this.request("PATCH", url+"room/"+roomNum, jo.toString());
+	}
 	/**
-	 * roomNum¹æ¿¡ resetDate¸¦ µî·ÏÇÏ°Å³ª °»½ÅÇÕ´Ï´Ù.<br>
-	 * resetDate¾øÀÌ º¸³»¸é resetDate°¡ »èÁ¦µË´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param roomNum Àº ¸®¼ÂÇÒ ³¯Â¥¸¦ ¼öÁ¤ÇÒ ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @param resetDate ¸®¼ÂÇÒ ³¯Â¥ °´Ã¼ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * roomNumë°©ì— acceptDateë¥¼ ë“±ë¡í•˜ê±°ë‚˜ ê°±ì‹ í•©ë‹ˆë‹¤.<br>
+	 * acceptDateì—†ì´ ë³´ë‚´ë©´ acceptDateê°€ ì‚­ì œë©ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param roomNum ì€ ë¦¬ì…‹í•  ë‚ ì§œë¥¼ ìˆ˜ì •í•  ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param resetDate ë¦¬ì…‹í•  ë‚ ì§œ ê°ì²´ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
-	public String patchResetDateRoom(int roomNum, Date resetDate) {  // Æ¯Á¤ ¹æÀÇ ÀÚ¸®°¡ ¸®¼ÂµÇ´Â ½Ã°£À» ¼³Á¤ÇÏ´Â ¿äÃ»
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS:SZ");
+	public String patchAcceptDateRoom(int roomNum, Date acceptDate) {  // íŠ¹ì • ë°©ì˜ ì˜ˆì•½ì´ ê°€ëŠ¥í•´ì§€ëŠ” ì‹œê°„ì„ ì„¤ì •í•˜ëŠ” ìš”ì²­
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		JSONObject jo = new JSONObject();
 		
-		jo.put("roomNum", roomNum);
+		if (acceptDate != null)
+		jo.put("acceptDate", df.format(acceptDate));
+		System.out.println(jo.toString());
+		
+		return this.request("PATCH", url+"room/"+roomNum+"/accept", jo.toString());
+	}
+	/**
+	 * roomNumë°©ì— resetDateë¥¼ ë“±ë¡í•˜ê±°ë‚˜ ê°±ì‹ í•©ë‹ˆë‹¤.<br>
+	 * resetDateì—†ì´ ë³´ë‚´ë©´ resetDateê°€ ì‚­ì œë©ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param roomNum ì€ ë¦¬ì…‹í•  ë‚ ì§œë¥¼ ìˆ˜ì •í•  ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param resetDate ë¦¬ì…‹í•  ë‚ ì§œ ê°ì²´ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
+	 */
+	public String patchResetDateRoom(int roomNum, Date resetDate) {  // íŠ¹ì • ë°©ì˜ ìë¦¬ê°€ ë¦¬ì…‹ë˜ëŠ” ì‹œê°„ì„ ì„¤ì •í•˜ëŠ” ìš”ì²­
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		JSONObject jo = new JSONObject();
+		
+		if (resetDate != null)
 		jo.put("resetDate", df.format(resetDate));
+		System.out.println(jo.toString());
 		
 		return this.request("PATCH", url+"room/"+roomNum+"/reset", jo.toString());
 	}
+	
+	public String patchAcceptDateAfterResetRoom(int roomNum, Date resetDate, Date ADAR) {  // íŠ¹ì • ë°©ì˜ ìë¦¬ê°€ ë¦¬ì…‹ë˜ëŠ” ì‹œê°„ì„ ì„¤ì •í•˜ëŠ” ìš”ì²­
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		JSONObject jo = new JSONObject();
+		
+		if (resetDate != null)
+		jo.put("resetDate", df.format(resetDate));
+		jo.put("acceptDateAfterReset", df.format(ADAR));
+		System.out.println(jo.toString());
+		
+		return this.request("PATCH", url+"room/"+roomNum, jo.toString());
+	}
 	/**
-	 * ÇöÀç »ç¿ëÀÚÀÇ roomNum¹æÀÇ Æ¯Á¤ ÁÂ¼®¿¡ ´ëÇÑ ¿¹¾àÀ» Ãë¼ÒÇÕ´Ï´Ù.
-	 * @param roomNum Àº ¿¹¾àÀ» Ãë¼ÒÇÒ ÁÂ¼®ÀÌ ÀÖ´Â ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @param sitNum Àº ¿¹¾àÀ» Ãë¼ÒÇÒ ÁÂ¼® ¹øÈ£ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * í˜„ì¬ ì‚¬ìš©ìì˜ roomNumë°©ì˜ íŠ¹ì • ì¢Œì„ì— ëŒ€í•œ ì˜ˆì•½ì„ ì·¨ì†Œí•©ë‹ˆë‹¤.
+	 * @param roomNum ì€ ì˜ˆì•½ì„ ì·¨ì†Œí•  ì¢Œì„ì´ ìˆëŠ” ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param sitNum ì€ ì˜ˆì•½ì„ ì·¨ì†Œí•  ì¢Œì„ ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
-	public String deleteReserveRoom(int roomNum, int sitNum) {  // Æ¯Á¤ ¹æ¿¡ ´ëÇØ¼­ Æ¯Á¤ ÀÚ¸®ÀÇ ¿¹¾àÀ» À§¼ÒÇÏ´Â ¿äÃ»
+	public String deleteReserveRoom(int roomNum, int sitNum) {  // íŠ¹ì • ë°©ì— ëŒ€í•´ì„œ íŠ¹ì • ìë¦¬ì˜ ì˜ˆì•½ì„ ìœ„ì†Œí•˜ëŠ” ìš”ì²­
 		JSONObject jo = new JSONObject();
 		
 		
@@ -384,14 +502,14 @@ public class HttpCaller {
 		return this.request("DELETE", url+"room/"+roomNum+"/reserve", jo.toString());
 	}
 	/**
-	 * Æ¯Á¤ À¯ÀúÀÇ roomNum¹æÀÇ Æ¯Á¤ ÁÂ¼®¿¡ ´ëÇÑ ¿¹¾àÀ» Ãë¼ÒÇÕ´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param userId ´Â ¿¹¾àÀ» Ãë¼ÒÇÒ »ç¿ëÀÚ ¾ÆÀÌµğÀÔ´Ï´Ù.
-	 * @param roomNum Àº ¿¹¾àÀ» Ãë¼ÒÇÒ ÁÂ¼®ÀÌ ÀÖ´Â ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @param sitNum Àº ¿¹¾àÀ» Ãë¼ÒÇÒ ÁÂ¼® ¹øÈ£ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * íŠ¹ì • ìœ ì €ì˜ roomNumë°©ì˜ íŠ¹ì • ì¢Œì„ì— ëŒ€í•œ ì˜ˆì•½ì„ ì·¨ì†Œí•©ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param userId ëŠ” ì˜ˆì•½ì„ ì·¨ì†Œí•  ì‚¬ìš©ì ì•„ì´ë””ì…ë‹ˆë‹¤.
+	 * @param roomNum ì€ ì˜ˆì•½ì„ ì·¨ì†Œí•  ì¢Œì„ì´ ìˆëŠ” ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param sitNum ì€ ì˜ˆì•½ì„ ì·¨ì†Œí•  ì¢Œì„ ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
-	public String deleteReserveRoom(String userId, int roomNum, int sitNum) {  // Æ¯Á¤ ¹æ¿¡ ´ëÇØ¼­ Æ¯Á¤ À¯ÀúÀÇ ¿¹¾àÀ» Ãë¼ÒÇÏ´Â ¿äÃ»
+	public String deleteReserveRoom(String userId, int roomNum, int sitNum) {  // íŠ¹ì • ë°©ì— ëŒ€í•´ì„œ íŠ¹ì • ìœ ì €ì˜ ì˜ˆì•½ì„ ì·¨ì†Œí•˜ëŠ” ìš”ì²­
 		JSONObject jo = new JSONObject();
 		
 		jo.put("userId", userId);
@@ -400,28 +518,36 @@ public class HttpCaller {
 		return this.request("DELETE", url+"room/"+roomNum+"/reserve", jo.toString());
 	}
 	/**
-	 * ÇöÀç »ç¿ëÀÚÀÇ roomNum¹æ¿¡ ´ëÇÑ ¿¹¾àÀ» Ãë¼ÒÇÕ´Ï´Ù.
-	 * @param roomNum Àº ¿¹¾àÀ» Ãë¼ÒÇÒ ÁÂ¼®ÀÌ ÀÖ´Â ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @param sitNum Àº ¿¹¾àÀ» Ãë¼ÒÇÒ ÁÂ¼® ¹øÈ£ÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * í˜„ì¬ ì‚¬ìš©ìì˜ roomNumë°©ì— ëŒ€í•œ ì˜ˆì•½ì„ ì·¨ì†Œí•©ë‹ˆë‹¤.
+	 * @param roomNum ì€ ì˜ˆì•½ì„ ì·¨ì†Œí•  ì¢Œì„ì´ ìˆëŠ” ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @param sitNum ì€ ì˜ˆì•½ì„ ì·¨ì†Œí•  ì¢Œì„ ë²ˆí˜¸ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
-	public String deleteReserveRoom(int roomNum) {  // Æ¯Á¤ ¹æ¿¡ ´ëÇØ¼­ ÇöÀç »ç¿ëÀÚÀÇ ¿¹¾àÀ» Ãë¼ÒÇÏ´Â ¿äÃ»
+	public String deleteReserveRoom(int roomNum) {  // íŠ¹ì • ë°©ì— ëŒ€í•´ì„œ í˜„ì¬ ì‚¬ìš©ìì˜ ì˜ˆì•½ì„ ì·¨ì†Œí•˜ëŠ” ìš”ì²­
 		return this.request("DELETE", url+"room/"+roomNum+"/reserve", null);
 	}
 	/**
-	 * ¹æÀ» »èÁ¦ÇÏ¸é¼­, ÀÌ ¹æ°ú °ü·ÃµÈ À¯ÀúµéÀÇ ¿¹¾àµéµµ »èÁ¦ µË´Ï´Ù.<br>
-	 * °ü¸®ÀÚ¸¸ »ç¿ë °¡´ÉÇÕ´Ï´Ù.
-	 * @param roomNum ´Â »èÁ¦ÇÒ ¹æ È£¼öÀÔ´Ï´Ù.
-	 * @return ¿äÃ» °á°ú ¸Ş½ÃÁö°¡ ¹İÈ¯µË´Ï´Ù.
+	 * ë°©ì„ ì‚­ì œí•˜ë©´ì„œ, ì´ ë°©ê³¼ ê´€ë ¨ëœ ìœ ì €ë“¤ì˜ ì˜ˆì•½ë“¤ë„ ì‚­ì œ ë©ë‹ˆë‹¤.<br>
+	 * ê´€ë¦¬ìë§Œ ì‚¬ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.
+	 * @param roomNum ëŠ” ì‚­ì œí•  ë°© í˜¸ìˆ˜ì…ë‹ˆë‹¤.
+	 * @return ìš”ì²­ ê²°ê³¼ ë©”ì‹œì§€ê°€ ë°˜í™˜ë©ë‹ˆë‹¤.
 	 */
 	public String deleteRoom(int roomNum) {
 		
 		return this.request("DELETE", url+"room/"+roomNum, null);
 	}
+	
+	
+	public String patchGrantAdmin(String userId) {
+		JSONObject jo = new JSONObject();
+		
+		jo.put("userId", userId);
+		return this.request("PATCH", url+"users/grantAdmin", jo.toString());
+	}
 	/**
-	 * ÇöÀç ÀÌ °´Ã¼¿¡¼­ ÀúÀåÇÏ°í ÀÖ´Â »ç¿ëÀÚ Á¤º¸¸¦ ÀüºÎ »èÁ¦ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ì´ ê°ì²´ì—ì„œ ì €ì¥í•˜ê³  ìˆëŠ” ì‚¬ìš©ì ì •ë³´ë¥¼ ì „ë¶€ ì‚­ì œí•©ë‹ˆë‹¤.
 	 */
-	public void clearData() {  // ÇöÀç ÀúÀåÇÏ°í ÀÖ´Â »ç¿ëÀÚ Á¤º¸¸¦ »èÁ¦ÇÑ´Ù.
+	public void clearData() {  // í˜„ì¬ ì €ì¥í•˜ê³  ìˆëŠ” ì‚¬ìš©ì ì •ë³´ë¥¼ ì‚­ì œí•œë‹¤.
 		this.id = "";
 		this.token = "";
 		this.email = null;
@@ -431,51 +557,51 @@ public class HttpCaller {
 		this.yjuNum = 0;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ ¿©ºÎ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-	 * @return ·Î±×ÀÎ µÇ¾î ÀÖÀ» ½Ã true, ¾Æ´Ò ½Ã false
+	 * í˜„ì¬ ë¡œê·¸ì¸ ì—¬ë¶€ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+	 * @return ë¡œê·¸ì¸ ë˜ì–´ ìˆì„ ì‹œ true, ì•„ë‹ ì‹œ false
 	 */
 	public boolean isLoggedIn() {
 		if (token.isEmpty()) return false;
 		return true;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ µÇ¾î ÀÖ´Â À¯ÀúÀÇ ID¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-	 * @return ·Î±×ÀÎ µÇ¾î ÀÖÁö ¾ÊÀ¸¸é °ø¹éÀ» ¹İÈ¯ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ ìˆëŠ” ìœ ì €ì˜ IDë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+	 * @return ë¡œê·¸ì¸ ë˜ì–´ ìˆì§€ ì•Šìœ¼ë©´ ê³µë°±ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 */
 	public String getId() {
 		return id;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ µÇ¾î ÀÖ´Â À¯ÀúÀÇ ÀÌ¸§À» ¹İÈ¯ÇÕ´Ï´Ù.
-	 * @return ·Î±×ÀÎ µÇ¾î ÀÖÁö ¾ÊÀ¸¸é nullÀ» ¹İÈ¯ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ ìˆëŠ” ìœ ì €ì˜ ì´ë¦„ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
+	 * @return ë¡œê·¸ì¸ ë˜ì–´ ìˆì§€ ì•Šìœ¼ë©´ nullì„ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 */
 	public String getName() {
 		return name;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ µÇ¾î ÀÖ´Â À¯ÀúÀÇ °ü¸®ÀÚ ¿©ºÎ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-	 * @return °ü¸®ÀÚÀÏ ½Ã true, ¾Æ´Ï°Å³ª ·Î±×ÀÎ µÇ¾îÀÖÁö ¾ÊÀ» ½Ã false
+	 * í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ ìˆëŠ” ìœ ì €ì˜ ê´€ë¦¬ì ì—¬ë¶€ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+	 * @return ê´€ë¦¬ìì¼ ì‹œ true, ì•„ë‹ˆê±°ë‚˜ ë¡œê·¸ì¸ ë˜ì–´ìˆì§€ ì•Šì„ ì‹œ false
 	 */
 	public boolean isAdmin() {
 		return isAdmin;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ µÇ¾î ÀÖ´Â À¯ÀúÀÇ ÇĞ¹øÀ» ¹İÈ¯ÇÕ´Ï´Ù.
-	 * @return ·Î±×ÀÎ µÇ¾î ÀÖÁö ¾ÊÀ¸¸é 0À» ¹İÈ¯ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ ìˆëŠ” ìœ ì €ì˜ í•™ë²ˆì„ ë°˜í™˜í•©ë‹ˆë‹¤.
+	 * @return ë¡œê·¸ì¸ ë˜ì–´ ìˆì§€ ì•Šìœ¼ë©´ 0ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 */
 	public int getYjuNum() {
 		return yjuNum;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ µÇ¾î ÀÖ´Â À¯ÀúÀÇ ÀÌ¸ŞÀÏÀ» ¹İÈ¯ÇÕ´Ï´Ù.
-	 * @return ·Î±×ÀÎ µÇ¾î ÀÖÁö ¾ÊÀ¸¸é nullÀ» ¹İÈ¯ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ ìˆëŠ” ìœ ì €ì˜ ì´ë©”ì¼ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
+	 * @return ë¡œê·¸ì¸ ë˜ì–´ ìˆì§€ ì•Šìœ¼ë©´ nullì„ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 */
 	public String getEmail() {
 		return email;
 	}
 	/**
-	 * ÇöÀç ·Î±×ÀÎ µÇ¾î ÀÖ´Â À¯Àú°¡ ¿¹¾àÇÑ ¹æ ¸ñ·ÏÀÌ ¹İÈ¯µË´Ï´Ù.
-	 * @return ·Î±×ÀÎ µÇ¾î ÀÖÁö ¾ÊÀ¸¸é nullÀ» ¹İÈ¯ÇÕ´Ï´Ù.
+	 * í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ ìˆëŠ” ìœ ì €ê°€ ì˜ˆì•½í•œ ë°© ëª©ë¡ì´ ë°˜í™˜ë©ë‹ˆë‹¤.
+	 * @return ë¡œê·¸ì¸ ë˜ì–´ ìˆì§€ ì•Šìœ¼ë©´ nullì„ ë°˜í™˜í•©ë‹ˆë‹¤.
 	 */
 	public JSONArray getReservedRooms() {
 		return reservedRooms;
