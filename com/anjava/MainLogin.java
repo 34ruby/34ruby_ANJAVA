@@ -375,7 +375,6 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				JOptionPane.showInternalMessageDialog(null, "회원정보가 일치하지 않습니다.", "정보 불일치",0 );
 			}
 		}
-
 		
 		//메인 화면에서 회원가입 버튼 눌렀을 때
 		if(e.getSource()==signUpBtn) {
@@ -506,7 +505,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 //			add(loggedInPanel.reserve);
 			loggedInPanel.btnPanel.setPreferredSize(new Dimension(600, (50 / 4 + 1) * 100));
 			loggedInPanel.scroll.setPreferredSize(new Dimension(600, 405));
-			loggedInPanel.setBounds(6, 49, 600, 405);	
+			loggedInPanel.setBounds(6, 49, 600, 415);	
 			add(cRoom);
 			add(dRoom);
 			add(resetDate);
@@ -671,15 +670,17 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		}
 		int[] reservedSeats;
 		seatsPanel = new SeatsPanel(col, row, colbl, rowbl, roomNum, reservedData, hc);
-		seatsPanel.setVisible(true);
-		seatsPanel.setBounds(20, -46, 800, 500);
 		
-//		remove(roomPanelLabel);
+		seatsPanel.setBounds(10, 50, 800, 500);
+	
+		remove(roomPanelLabel);
 		add(seatsPanel);
-//		add(roomPanelLabel);
+//		remove(loggedInPanel);
+		add(roomPanelLabel);
+		seatsPanel.setVisible(true);
 //		seatsPanel.setBackground(Color.gray.brighter());
 		
-		seatsPanel.setVisible(true);
+//		seatsPanel.setVisible(true);
 	}
 	
 	public void deleteSeats() {
