@@ -66,14 +66,14 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//Label
 		
 		 //Main Title Label
-		mainTitle = new JLabel("¿µÁø 2WDJ ÁÂ¼® ¿¹¾à");
+		mainTitle = new JLabel("ì˜ì§„ 2WDJ ì¢Œì„ ì˜ˆì•½");
 		mainTitle.setBounds(155,-160,500,500);
-		mainTitle.setFont(new Font("¿©±â¾î¶§ Àß³­Ã¼",Font.CENTER_BASELINE,45));
+		mainTitle.setFont(new Font("ì—¬ê¸°ì–´ë•Œ ì˜ë‚œì²´",Font.CENTER_BASELINE,45));
 		
 		 //Sub Title Label
 		subTitle = new JLabel("Anjava");
 		subTitle.setBounds(365,-110,500,500);
-		subTitle.setFont(new Font("¿©±â¾î¶§ Àß³­Ã¼",Font.BOLD,20));
+		subTitle.setFont(new Font("ì—¬ê¸°ì–´ë•Œ ì˜ë‚œì²´",Font.BOLD,20));
 		
 		 //ID Label
 		idLabel = new JLabel("");
@@ -86,18 +86,18 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		 //welcome Label
 		welcome = new JLabel();
 		welcome.setBounds(15,-128,300,300);
-		welcome.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 20));
+		welcome.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 20));
 		welcome.setForeground(Color.white);
 		welcome.setVisible(false);
 		
-		 // ¸ŞÀÎÅ¸ÀÌÆ²
+		 // ë©”ì¸íƒ€ì´í‹€
 		mainLogLabel = new AntialiasedLabel("");
 		mainLogLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/mainlogin2.jpg")));
 //		mainLogLabel.setIcon()
 		mainLogLabel.setBounds(0, 0, 800, 500);
 //		BufferedImage image = new BufferedImage();
 		
-		 // È¸¿ø°¡ÀÔ
+		 // íšŒì›ê°€ì…
 
 		
 		
@@ -105,7 +105,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		
 		//TextField
-		//setBorder ¸Ş¼Òµå ¿À¹ö¶óÀÌµùÀ¸·Î JTextFieldÀÇ Å×µÎ¸® »èÁ¦
+		//setBorder ë©”ì†Œë“œ ì˜¤ë²„ë¼ì´ë”©ìœ¼ë¡œ JTextFieldì˜ í…Œë‘ë¦¬ ì‚­ì œ
 		//ID
 		ID = new JTextField(15);
 		ID.setBorder(null);
@@ -130,7 +130,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		PASSWORD.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
 		PASSWORD.setForeground(new Color( 125, 124, 130));
 		
-		// ·Î±×ÀÎ Ã¢
+		// ë¡œê·¸ì¸ ì°½
 		logTypingLabel = new AntialiasedLabel("");
 		logTypingLabel.setIcon(new ImageIcon(MainLogin.class.getResource("/image/logTypingLabel.jpg")));
 		logTypingLabel.setBounds(0, 0, 300, 300);
@@ -142,24 +142,24 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		//Buttons
 		 //LogIn Button
 		logInBtn = new JButton();
-		logInBtn.setText("·Î±×ÀÎ");
+		logInBtn.setText("ë¡œê·¸ì¸");
 		logInBtn.setBounds(160, 185, 100, 35);
 		logInBtn.setBackground(new Color(135,77,162));
-		logInBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 14));
+		logInBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 14));
 		logInBtn.addActionListener(this);
 		logInBtn.setBorderPainted(false);
 		
 		//main Button
-		mainBtn = new JButton("µÚ·Î°¡±â");
+		mainBtn = new JButton("ë’¤ë¡œê°€ê¸°");
 		mainBtn.setBounds(598, 464, 84, 25);
 		
 		//create Room Button
-		cRoom = new JButton("¹æ¸¸µé±â"){
+		cRoom = new JButton("ë°©ë§Œë“¤ê¸°"){
 			@Override 
 			public void setBorder(Border border) {		
 			}
 		};
-		cRoom.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 25));
+		cRoom.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 25));
 		cRoom.setForeground(Color.white);
 		cRoom.setBackground(new Color(135,77,162));
 		cRoom.setBounds(622,58,160,100);
@@ -171,43 +171,43 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		});
 		
 		//delete Room Button
-		dRoom = new JButton("¹æÁö¿ì±â"){
+		dRoom = new JButton("ë°©ì§€ìš°ê¸°"){
 			@Override 
 			public void setBorder(Border border) {		
 			}
 		};
 		dRoom.setBounds(622,204,160,100);
-		dRoom.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 25));
+		dRoom.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 25));
 		dRoom.setForeground(Color.white);
 		dRoom.setBackground(new Color(135,77,162));
 		dRoom.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                // TODO Auto-generated method stub
-               String input = JOptionPane.showInputDialog("Áö¿ï ¹æÀÇ È£¼ö¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+               String input = JOptionPane.showInputDialog("ì§€ìš¸ ë°©ì˜ í˜¸ìˆ˜ë¥¼ ì…ë ¥í•˜ì„¸ìš”.");
                hc.deleteRoom(Integer.valueOf(input));
             }
          });
 		
 		//reset Date Button
-		resetDate = new JButton("ÃÊ±âÈ­¼³Á¤"){
+		resetDate = new JButton("ì´ˆê¸°í™”ì„¤ì •"){
 			@Override 
 			public void setBorder(Border border) {		
 			}
 		};
 		
 		resetDate.setBounds(622,350,160,100);
-		resetDate.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 25));
+		resetDate.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 25));
 		resetDate.setForeground(Color.white);
 		resetDate.setBackground(new Color(135,77,162));
 
 		
 		 //SignUp Button
-		signUpBtn = new JButton("È¸¿ø°¡ÀÔ");
+		signUpBtn = new JButton("íšŒì›ê°€ì…");
 		signUpBtn.setBounds(50, 185, 100, 35);
 		signUpBtn.setBackground(Color.LIGHT_GRAY);
-		signUpBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 14));
-		signUpBtn.setBorderPainted(false); // ¹öÆ° Å×µÎ¸® ¾ø¾Ö±â
+		signUpBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 14));
+		signUpBtn.setBorderPainted(false); // ë²„íŠ¼ í…Œë‘ë¦¬ ì—†ì• ê¸°
 		signUpBtn.addActionListener(this);
 		
 		 //Exit Button
@@ -223,10 +223,10 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		});
 		
 		 //LogOutButton
-		logOutBtn = new JButton("·Î±×¾Æ¿ô");
+		logOutBtn = new JButton("ë¡œê·¸ì•„ì›ƒ");
 		
 		logOutBtn.setBackground(new Color(135,77,162));
-		logOutBtn.setFont(new Font("HY°ß°íµñ", Font.PLAIN, 10));
+		logOutBtn.setFont(new Font("HYê²¬ê³ ë”•", Font.PLAIN, 10));
 		logOutBtn.setForeground(Color.white);
 		logOutBtn.setBorderPainted(false);
 		logOutBtn.setVisible(true);
@@ -250,7 +250,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		logOutBtn.setBounds(699, 464, 84, 25);
 		
 		
-		//È¸¿ø°¡ÀÔ Ã¢ ÀÔ·ÂÇ×¸ñ ¼³Á¤
+		//íšŒì›ê°€ì… ì°½ ì…ë ¥í•­ëª© ì„¤ì •
 		for(int i = 0; i < signUpPanel.categories.length; i++) {
 			logInLabels[i] = new JLabel(signUpPanel.categories[i]);
 			logInLabels[i].setHorizontalAlignment(JLabel.RIGHT);
@@ -319,13 +319,13 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	public void actionPerformed(ActionEvent e) {
 		imagePanel.setVisible(true);
 		
-		//·Î±×ÀÎ ¹öÆ° ´­·¶À» ¶§
+		//ë¡œê·¸ì¸ ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 		if(e.getSource()==logInBtn) {
 			hc.postLogIn(ID.getText(), PASSWORD.getPassword());
 			add(mainBtn);
 			addAdminBtn();
 			
-			//·Î±×ÀÎ µÈ Ã¢¿¡¼­ µÚ·Î°¡±â ´­·¶À» ¶§
+			//ë¡œê·¸ì¸ ëœ ì°½ì—ì„œ ë’¤ë¡œê°€ê¸° ëˆŒë €ì„ ë•Œ
 			mainBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -341,7 +341,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				}
 			});
 			mainBtn.setVisible(false);
-			//·Î±×ÀÎ Á¤º¸°¡ ÀÏÄ¡ÇÒ ¶§
+			//ë¡œê·¸ì¸ ì •ë³´ê°€ ì¼ì¹˜í•  ë•Œ
 			if(hc.isLoggedIn()) {		
 				roomsData = new JSONObject(hc.getAllRoom()).getJSONObject("data").getJSONArray("roomsData");
 			    roomsData = sortJsonArray(roomsData, "roomNum");
@@ -349,12 +349,12 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				addLoggedInPanel();
 				deleteMainLogIn();
 				setLogInTextEmpty();
-				//·Î±×ÀÎ ÇßÀ» ¶§ »ı±â´Â Buttons
+				//ë¡œê·¸ì¸ í–ˆì„ ë•Œ ìƒê¸°ëŠ” Buttons
 				
 				for(int i = 0; i < loggedInPanel.boxCount; i++) {
 					int roomNum = roomsData.getJSONObject(i).getInt("roomNum");
 					loggedInPanel.reserveBtn[i].addActionListener(new ActionListener() {
-//											//¿¹¾à¹öÆ° ´­·¶À» ¶§
+//											//ì˜ˆì•½ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 //											@Override
 											public void actionPerformed(ActionEvent e) {
 //												remove(loggedInPanel);
@@ -372,13 +372,13 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 //					loggedInPanel.add(loggedInPanel.reserveBtn[i]);
 				}
 				
-				//·Î±×ÀÎ Á¤º¸°¡ ºÒÀÏÄ¡ÇÒ ¶§
+				//ë¡œê·¸ì¸ ì •ë³´ê°€ ë¶ˆì¼ì¹˜í•  ë•Œ
 			}else {
-				JOptionPane.showInternalMessageDialog(null, "È¸¿øÁ¤º¸°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.", "Á¤º¸ ºÒÀÏÄ¡",0 );
+				JOptionPane.showInternalMessageDialog(null, "íšŒì›ì •ë³´ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", "ì •ë³´ ë¶ˆì¼ì¹˜",0 );
 			}
 		}
 		
-		//¸ŞÀÎ È­¸é¿¡¼­ È¸¿ø°¡ÀÔ ¹öÆ° ´­·¶À» ¶§
+		//ë©”ì¸ í™”ë©´ì—ì„œ íšŒì›ê°€ì… ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 		if(e.getSource()==signUpBtn) {
 			
 			signUpBtnPanel = new JPanel();
@@ -391,9 +391,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 //			logInLabelPanel.setBackground(Color.white);
 			
 			
-			//È¸¿ø°¡ÀÔÃ¢ÀÇ ¹öÆ°
-			signUpBtn2 = new JButton("È¸¿ø°¡ÀÔ");
-			backBtn = new JButton("µÚ·Î°¡±â");
+			//íšŒì›ê°€ì…ì°½ì˜ ë²„íŠ¼
+			signUpBtn2 = new JButton("íšŒì›ê°€ì…");
+			backBtn = new JButton("ë’¤ë¡œê°€ê¸°");
 			
 			signUpBtn2.setBackground(new Color(255,150,0));
 			signUpBtn2.setBorderPainted(false);
@@ -422,7 +422,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					//È¸¿ø°¡ÀÔ Ã¢¿¡¼­ È¸¿ø°¡ÀÔ ¹öÆ° ´­·¶À» ¶§
+					//íšŒì›ê°€ì… ì°½ì—ì„œ íšŒì›ê°€ì… ë²„íŠ¼ ëˆŒë €ì„ ë•Œ
 					int yjuNum;
 		               if (signUpPanel.fields[4].getText().equals("")) {
 		                  yjuNum = 0;
@@ -438,10 +438,10 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 					System.out.println(res);
 					JSONObject jo = new JSONObject(res);
 					if (!signUpPanel.pwdFields[0].getPassword().equals(signUpPanel.pwdFields[1].getPassword())) {
-						JOptionPane.showInternalMessageDialog(null, "ºñ¹Ğ¹øÈ£°¡ µ¿ÀÏÇÏÁö ¾Ê½À´Ï´Ù.", "Error",1);
+						JOptionPane.showInternalMessageDialog(null, "ë¹„ë°€ë²ˆí˜¸ê°€ ë™ì¼í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.", "Error",1);
 					}
 					else if (jo.isNull("status")) {
-						JOptionPane.showInternalMessageDialog(null, "È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.\n ´Ù½Ã ·Î±×ÀÎ ÇØÁÖ½Ê½Ã¿À.","È¸¿ø°¡ÀÔ ¿Ï·á",1);
+						JOptionPane.showInternalMessageDialog(null, "íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n ë‹¤ì‹œ ë¡œê·¸ì¸ í•´ì£¼ì‹­ì‹œì˜¤.","íšŒì›ê°€ì… ì™„ë£Œ",1);
 						for(int i = 0; i < signUpPanel.categories.length; i++) {
 							logInLabels[i].setVisible(false);
 						}
@@ -454,7 +454,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				}				
 			});
 			
-			//µÚ·Î°¡±â ¹öÆ°
+			//ë’¤ë¡œê°€ê¸° ë²„íŠ¼
 			backBtn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -500,7 +500,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		add(welcome);
 		welcome.setVisible(true);
 		loggedInPanel.setVisible(true);
-		welcome.setText(hc.getName() + "´Ô ¹İ°©½À´Ï´Ù.");
+		welcome.setText(hc.getName() + "ë‹˜ ë°˜ê°‘ìŠµë‹ˆë‹¤.");
 		add(logOutBtn);
 		add(loggedInPanel);
 		if(hc.isAdmin()) {
@@ -525,8 +525,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		setLayout(null);
 		roomNum = new JTextField();
 		roomNum.setBounds(125,35,150,25);
-		roomNum.setToolTipText("¼ıÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
-		roomNumLabel = new JLabel("°­ÀÇ½Ç È£¼ö");
+		roomNum.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+		roomNumLabel = new JLabel("ê°•ì˜ì‹¤ í˜¸ìˆ˜");
 		roomNumLabel.setBounds(48,35,70,25);
 		roomNumLabel.setHorizontalAlignment(JLabel.RIGHT);
 		add(roomNumLabel);
@@ -534,8 +534,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		col = new JTextField();
 		col.setBounds(125,82,150,25);
-		col.setToolTipText("¼ıÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
-		colLabel = new JLabel("¿­ ¼ö");
+		col.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+		colLabel = new JLabel("ì—´ ìˆ˜");
 		colLabel.setBounds(65,82,50,25);
 		colLabel.setHorizontalAlignment(JLabel.RIGHT);
 		add(colLabel);
@@ -544,8 +544,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 
 		row = new JTextField();
 		row.setBounds(125,129,150,25);
-		row.setToolTipText("¼ıÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
-		rowLabel = new JLabel("Çà ¼ö");
+		row.setToolTipText("ìˆ«ìë¡œë§Œ ì…ë ¥í•˜ì„¸ìš”.");
+		rowLabel = new JLabel("í–‰ ìˆ˜");
 		rowLabel.setBounds(65,129,50,25);
 		rowLabel.setHorizontalAlignment(JLabel.RIGHT);
 		add(rowLabel);
@@ -554,7 +554,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		colBlank = new JTextField();
 		colBlank.setBounds(125,176,150,25);
-		colBlankLabel = new JLabel("¿­ ¶ç¿ì±â");
+		colBlankLabel = new JLabel("ì—´ ë„ìš°ê¸°");
 		colBlankLabel.setBounds(35,176,80,25);
 		colBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
 		add(colBlankLabel);
@@ -562,13 +562,13 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		rowBlank = new JTextField();
 		rowBlank.setBounds(125,223,150,25);
-		rowBlankLabel = new JLabel("Çà ¶ç¿ì±â");
+		rowBlankLabel = new JLabel("í–‰ ë„ìš°ê¸°");
 		rowBlankLabel.setBounds(35,223,80,25);
 		rowBlankLabel.setHorizontalAlignment(JLabel.RIGHT);
 		add(rowBlankLabel);
 		add(rowBlank);
 		
-		makeRoomBtn = new JButton("¹æ¸¸µé±â");
+		makeRoomBtn = new JButton("ë°©ë§Œë“¤ê¸°");
 		makeRoomBtn.addActionListener(this);
 		makeRoomBtn.setBounds(190,265,85,25);
 		
@@ -762,5 +762,6 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		new MainLogin();
 	}
 	
+
 	
 }
