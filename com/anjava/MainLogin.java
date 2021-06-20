@@ -143,8 +143,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		 //LogIn Button
 		logInBtn = new JButton();
 		logInBtn.setText("로그인");
-		logInBtn.setBounds(172, 185, 80, 35);
+		logInBtn.setBounds(160, 185, 100, 35);
 		logInBtn.setBackground(new Color(135,77,162));
+		logInBtn.setFont(new Font("HY견고딕", Font.PLAIN, 14));
 		logInBtn.addActionListener(this);
 		logInBtn.setBorderPainted(false);
 		
@@ -203,8 +204,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		
 		 //SignUp Button
 		signUpBtn = new JButton("회원가입");
-		signUpBtn.setBounds(10, 185, 120, 40);
-		signUpBtn.setBackground(Color.white);
+		signUpBtn.setBounds(50, 185, 100, 35);
+		signUpBtn.setBackground(Color.LIGHT_GRAY);
+		signUpBtn.setFont(new Font("HY견고딕", Font.PLAIN, 14));
 		signUpBtn.setBorderPainted(false); // 버튼 테두리 없애기
 		signUpBtn.addActionListener(this);
 		
@@ -671,7 +673,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		int[] reservedSeats;
 		seatsPanel = new SeatsPanel(col, row, colbl, rowbl, roomNum, reservedData, hc);
 		
-		seatsPanel.setBounds(10, 50, 800, 500);
+		seatsPanel.setBounds(10, 50, 800, 400);
+		seatsPanel.setBackground(Color.white);
 	
 		remove(roomPanelLabel);
 		add(seatsPanel);

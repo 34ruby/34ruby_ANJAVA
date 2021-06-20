@@ -83,7 +83,7 @@ class SeatsPanel extends JPanel {
 
 	   public SeatsPanel(int col, int row, int[] colbl, int[] rowbl, int roomNum, int[] otherReservedSeats, HttpCaller hc) {
 //	      this.setLayout(null);
-		  this.setBackground(new Color(255,255,255));
+		  this.setBackground(new Color(255,255,0));
 	      this.hc = hc;
 		  this.roomNum = roomNum;
 	      this.setLayout(null);
