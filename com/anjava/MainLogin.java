@@ -37,7 +37,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	AntialiasedLabel mainLogLabel, signUpPanelLabel;
 	JTextField ID, col, row, roomNum, colBlank, rowBlank, deleteNum, roomNumField, colField, rowField, colBlankField, rowBlankField;
 	JPasswordField PASSWORD;;
-	JButton aBtn, logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, makeRoomBtn, dBtn,editBtn, refresh ,sprefresh, outBtn;
+	JButton aBtn, logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, makeRoomBtn, dBtn,editBtn, refresh ,sprefresh, outBtn, outRoomStBtn;
 	LoggedInPanel loggedInPanel;
 	Font Title = new Font(null);
 	ImageIcon icon;
@@ -110,7 +110,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 		 //ID
 		ID = new JTextField(15);
 		ID.setBorder(null);
-		ID.setBounds(70,40,250,40);
+		ID.setBounds(70,35,250,40);
 		ID.addKeyListener(this);
 		ID.setText("test6");
 		ID.setFont(new Font("SAN SERIF", Font.PLAIN, 25));
@@ -250,7 +250,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	         @Override
 	         public void actionPerformed(ActionEvent e) {
 	        	 loggedInPanel.setVisible(false);
+	        	 remove(roomHintLabel);
 	        	 refreshLoggedInPanel();
+	        	 
 	         }
 	         
 	      });
@@ -274,7 +276,9 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				seatsPanel.setVisible(false);
+				remove(selectHintLabel);
 				addSeats(currentRoomNumber);
+				
 			}
 	    	  
 	      });
@@ -292,6 +296,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				remove(sprefresh);
+				remove(editBtn);
 				remove(roomHintLabel);
 				deleteLoggedInPanel();
 				hc.clearData();
@@ -407,6 +413,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	        	
 	        	@Override
         		public void actionPerformed(ActionEvent e) {
+	        		
+	        		
         			JSONObject roomData = new JSONObject(hc.getOneRoom(currentRoomNumber)).getJSONObject("data").getJSONObject("roomData");
         			new UpdateRoom(currentRoomNumber, roomData);
         			
@@ -453,12 +461,19 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			
 			
 			//회원가입창의 버튼
+			
 			signUpBtn2 = new JButton("회원가입");
 			backBtn = new JButton("뒤로가기");
 			
-			signUpBtn2.setBackground(Color.gray);
+			
+			
+			signUpBtn2.setBackground(Color.LIGHT_GRAY);
 			signUpBtn2.setBorderPainted(false);
+			signUpBtn2.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			backBtn.setBackground(new Color(135,77,162));
 			backBtn.setBorderPainted(false);
+			backBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+			backBtn.setForeground(Color.white);
 			
 			signUpBtnPanel.setBounds(515,420,180,35);
 			signUpBtnPanel.setBackground(Color.white);
@@ -468,12 +483,10 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			
 			signUpPanel.setBackground(new Color(255,255,255,0));
 			signUpMainPanel.setBounds(350,550,300,200);
-
-
 			
-			signUpPanel.add(signUpMainPanel);		
-			signUpBtnPanel.add(backBtn);
+			signUpPanel.add(signUpMainPanel);			
 			signUpBtnPanel.add(signUpBtn2);
+			signUpBtnPanel.add(backBtn);
 			signUpBtnPanel.add(signUpMainPanel);
 
 			
@@ -728,9 +741,19 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	      add(rowBlankField);
 	      
 	      makeRoomBtn = new JButton("방만들기");
+	      makeRoomBtn.setBackground(Color.LIGHT_GRAY);
+	      makeRoomBtn.setBorderPainted(false);
 	      makeRoomBtn.addActionListener(this);
 	      makeRoomBtn.setBounds(180,265,85,25);
 	      add(makeRoomBtn);
+	      
+	      outRoomStBtn = new JButton("취소");
+	      outRoomStBtn.setBackground(Color.LIGHT_GRAY);
+	      outRoomStBtn.setBorderPainted(false);
+	      outRoomStBtn.addActionListener(this);
+	      outRoomStBtn.setBounds(60,265,85,25);
+	      add(outRoomStBtn);
+	      
 //	         
 //	         cRoomPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 //	         cRoomPanel.setLayout(new GridLayout(4,2,15,15));
@@ -799,6 +822,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 
 	    //shuffle checkBox
 	    shuffle = new JCheckBox("  리셋 시 셔플");
+	    shuffle.setFont(new Font("HY견고딕", Font.PLAIN, 11));
 	    shuffle.setBounds(445,300,100,20);
 	    shuffle.setHorizontalTextPosition(SwingConstants.RIGHT);
 	    add(shuffle);
@@ -953,92 +977,101 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 //	    add(b2);
 //	    add(b3);
 	      setLocationRelativeTo(null);
+	      setUndecorated(true);
 	      setVisible(true);
 	      }
 	      @Override
 	      public void actionPerformed(ActionEvent e) {
-	        RoomCreator rc = new RoomCreator();
-	         StringTokenizer colst = new StringTokenizer(colBlankField.getText(), ", ");
-	         StringTokenizer rowst = new StringTokenizer(rowBlankField.getText(), ", ");
-	         int[] colBlankArray = new int[colst.countTokens()];
-	         int[] rowBlankArray = new int[rowst.countTokens()];
-	         
-	         for (int i=0; i<colBlankArray.length; i++) {
-	            colBlankArray[i] = Integer.valueOf(colst.nextToken());
-	         }
-	         for (int i=0; i<rowBlankArray.length; i++) {
-	            rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
-	         }
-	         
-	         int roomNum = Integer.valueOf(roomNumField.getText());
-	         int col = Integer.valueOf(colField.getText());
-	         int row = Integer.valueOf(rowField.getText());
-	         int[] colBlank = colBlankArray.length == 0 ? null : colBlankArray;
-	         int[] rowBlank = rowBlankArray.length == 0 ? null : rowBlankArray;
-	         rc.setRoomNum(roomNum);
-	         rc.setCol(col);
-	         rc.setRow(row);
-	         if (colBlank != null) {
-	            rc.setColBlank(colBlank);
-	         }
-	         if (rowBlank != null) {
-	            rc.setRowBlank(rowBlank);
-	         }
-	         
-	         
-	         Date resetDate = (Date) datePicker.getModel().getValue();
-	         if (resetDate != null) {
-	            resetDate.setHours(Integer.valueOf((String) resetHour.getSelectedItem() == "" ? "0" : (String) resetHour.getSelectedItem()));
-	            resetDate.setMinutes(Integer.valueOf((String) resetMinute.getSelectedItem() == "" ? "0" : (String) resetMinute.getSelectedItem()));
-	            resetDate.setSeconds(0);
-	            rc.setResetDate(resetDate);
-	         }
-	         
-	         Date acceptDate = (Date) datePicker2.getModel().getValue();
-	         if (acceptDate != null) {
-	            acceptDate.setHours(Integer.valueOf((String)startHour.getSelectedItem() == "" ? "0" : (String)startHour.getSelectedItem()));
-	            acceptDate.setMinutes(Integer.valueOf((String) startMinute.getSelectedItem() == "" ? "0" : (String) startMinute.getSelectedItem()));
-	            acceptDate.setSeconds(0);
-	            rc.setAcceptDate(acceptDate);
-	         }
-	         
-	         boolean isShuffle = shuffle.isSelected();
-	         rc.setShuffle(isShuffle);
-	         int openDeffer;
-	         
-	         int measure = options.getSelectedIndex();
-	         if (measure == 1) {
-	            measure = 0;
-	            int weekendInterval = weekBox.getSelectedIndex()+1;
-	            rc.setMeasure(measure);
-	            rc.setWeekendInterval(weekendInterval);
-	            if (!weekDelayField.getText().equals("")) {
-			        openDeffer = Integer.valueOf(weekDelayField.getText());
-			        rc.setOpenDeffer(openDeffer);
-			     } else {
-			        rc.setOpenDeffer(0);
-			     }
-	         }else if (measure == 2) {
-	            measure = 1;
-	            int weekNth = monthWeekBox.getSelectedIndex()+1;
-	            int day = dayBox.getSelectedIndex();
-	            rc.setWeekNth(weekNth);
-	            rc.setMeasure(measure);
-	            rc.setDay(day);
-	            if (!monthResetDelayField.getText().equals("")) {
-	 	           openDeffer = Integer.valueOf(monthResetDelayField.getText());
-	 	           rc.setOpenDeffer(openDeffer);
-	 	         } else {
-	 	        	rc.setOpenDeffer(0);
-	 	         }
-	         }
-	         
-	         System.out.println(hc.postCreateRoom(rc));
-	         loggedInPanel.setVisible(false);
-        	 refreshLoggedInPanel();
-	         dispose();
-	         
-	      }
+	    	  
+	    	  if (e.getSource() == outRoomStBtn) {
+	    		  dispose();
+	    	  } else {
+		    	  
+	  	        RoomCreator rc = new RoomCreator();
+	  	         StringTokenizer colst = new StringTokenizer(colBlankField.getText(), ", ");
+	  	         StringTokenizer rowst = new StringTokenizer(rowBlankField.getText(), ", ");
+	  	         int[] colBlankArray = new int[colst.countTokens()];
+	  	         int[] rowBlankArray = new int[rowst.countTokens()];
+	  	         
+	  	         for (int i=0; i<colBlankArray.length; i++) {
+	  	            colBlankArray[i] = Integer.valueOf(colst.nextToken());
+	  	         }
+	  	         for (int i=0; i<rowBlankArray.length; i++) {
+	  	            rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
+	  	         }
+	  	         
+	  	         int roomNum = Integer.valueOf(roomNumField.getText());
+	  	         int col = Integer.valueOf(colField.getText());
+	  	         int row = Integer.valueOf(rowField.getText());
+	  	         int[] colBlank = colBlankArray.length == 0 ? null : colBlankArray;
+	  	         int[] rowBlank = rowBlankArray.length == 0 ? null : rowBlankArray;
+	  	         rc.setRoomNum(roomNum);
+	  	         rc.setCol(col);
+	  	         rc.setRow(row);
+	  	         if (colBlank != null) {
+	  	            rc.setColBlank(colBlank);
+	  	         }
+	  	         if (rowBlank != null) {
+	  	            rc.setRowBlank(rowBlank);
+	  	         }
+	  	         
+	  	         
+	  	         Date resetDate = (Date) datePicker.getModel().getValue();
+	  	         if (resetDate != null) {
+	  	            resetDate.setHours(Integer.valueOf((String) resetHour.getSelectedItem() == "" ? "0" : (String) resetHour.getSelectedItem()));
+	  	            resetDate.setMinutes(Integer.valueOf((String) resetMinute.getSelectedItem() == "" ? "0" : (String) resetMinute.getSelectedItem()));
+	  	            resetDate.setSeconds(0);
+	  	            rc.setResetDate(resetDate);
+	  	         }
+	  	         
+	  	         Date acceptDate = (Date) datePicker2.getModel().getValue();
+	  	         if (acceptDate != null) {
+	  	            acceptDate.setHours(Integer.valueOf((String)startHour.getSelectedItem() == "" ? "0" : (String)startHour.getSelectedItem()));
+	  	            acceptDate.setMinutes(Integer.valueOf((String) startMinute.getSelectedItem() == "" ? "0" : (String) startMinute.getSelectedItem()));
+	  	            acceptDate.setSeconds(0);
+	  	            rc.setAcceptDate(acceptDate);
+	  	         }
+	  	         
+	  	         boolean isShuffle = shuffle.isSelected();
+	  	         rc.setShuffle(isShuffle);
+	  	         int openDeffer;
+	  	         
+	  	         int measure = options.getSelectedIndex();
+	  	         if (measure == 1) {
+	  	            measure = 0;
+	  	            int weekendInterval = weekBox.getSelectedIndex()+1;
+	  	            rc.setMeasure(measure);
+	  	            rc.setWeekendInterval(weekendInterval);
+	  	            if (!weekDelayField.getText().equals("")) {
+	  			        openDeffer = Integer.valueOf(weekDelayField.getText());
+	  			        rc.setOpenDeffer(openDeffer);
+	  			     } else {
+	  			        rc.setOpenDeffer(0);
+	  			     }
+	  	         }else if (measure == 2) {
+	  	            measure = 1;
+	  	            int weekNth = monthWeekBox.getSelectedIndex()+1;
+	  	            int day = dayBox.getSelectedIndex();
+	  	            rc.setWeekNth(weekNth);
+	  	            rc.setMeasure(measure);
+	  	            rc.setDay(day);
+	  	            if (!monthResetDelayField.getText().equals("")) {
+	  	 	           openDeffer = Integer.valueOf(monthResetDelayField.getText());
+	  	 	           rc.setOpenDeffer(openDeffer);
+	  	 	         } else {
+	  	 	        	rc.setOpenDeffer(0);
+	  	 	         }
+	  	         }
+	  	         
+	  	         System.out.println(hc.postCreateRoom(rc));
+	  	         loggedInPanel.setVisible(false);
+	          	 refreshLoggedInPanel();
+	  	         dispose();
+	  	         
+	  	      }
+	    	  }
+	    	  
+
 	      
 	   }
 	
@@ -1162,9 +1195,18 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	      add(rowBlankField);
 	     
 	      makeRoomBtn = new JButton("설정변경");
+	      makeRoomBtn.setBackground(Color.LIGHT_GRAY);
+	      makeRoomBtn.setBorderPainted(false);
 	      makeRoomBtn.addActionListener(this);
 	      makeRoomBtn.setBounds(180,265,85,25);
 	      add(makeRoomBtn);
+	      
+	      outRoomStBtn = new JButton("취소");
+	      outRoomStBtn.setBackground(Color.LIGHT_GRAY);
+	      outRoomStBtn.setBorderPainted(false);
+	      outRoomStBtn.addActionListener(this);
+	      outRoomStBtn.setBounds(60,265,85,25);
+	      add(outRoomStBtn);
 	     
 	      
 //	         
@@ -1180,6 +1222,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	   
 
 	    JLabel selectDate = new JLabel("좌석초기화 날짜 선택");
+	    selectDate.setFont(new Font("HY견고딕", Font.PLAIN, 12));
 	    selectDate.setBounds(380,4,140,30);
 	    add(selectDate);
 	     
@@ -1460,109 +1503,116 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	    
 	    
 	      setLocationRelativeTo(null);
+	      setUndecorated(true);
 	      setVisible(true);
 	      }
 	      @Override
 	      public void actionPerformed(ActionEvent e) {
-	        RoomCreator rc = new RoomCreator();
-	         StringTokenizer colst = new StringTokenizer(colBlankField.getText(), ", ");
-	         StringTokenizer rowst = new StringTokenizer(rowBlankField.getText(), ", ");
-	         int[] colBlankArray = new int[colst.countTokens()];
-	         int[] rowBlankArray = new int[rowst.countTokens()];
-	         
-	         for (int i=0; i<colBlankArray.length; i++) {
-	            colBlankArray[i] = Integer.valueOf(colst.nextToken());
-	         }
-	         for (int i=0; i<rowBlankArray.length; i++) {
-	            rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
-	         }
-	         
-	         int roomNum = Integer.valueOf(roomNumField.getText());
-	         int col = Integer.valueOf(colField.getText());
-	         int row = Integer.valueOf(rowField.getText());
-	         
-	         
-	         int[] colBlank = colBlankArray.length == 0 ? null : colBlankArray;
-	         int[] rowBlank = rowBlankArray.length == 0 ? null : rowBlankArray;
-	         rc.setRoomNum(roomNum);
-	         rc.setCol(col);
-	         rc.setRow(row);
-	         if (colBlank != null) {
-	            rc.setColBlank(colBlank);
-	         } else {
-	        	 rc.setColBlank(new int[0]);
-	         }
-	         if (rowBlank != null) {
-	            rc.setRowBlank(rowBlank);
-	         } else {
-	        	 rc.setRowBlank(new int[0]);
-	         }
-	         
-	         
-	         Date resetDate = (Date) datePicker.getModel().getValue();
-	         if (resetDate != null) {
-	            resetDate.setHours(Integer.valueOf((String) resetHour.getSelectedItem() == "" ? "0" : (String) resetHour.getSelectedItem()));
-	            resetDate.setMinutes(Integer.valueOf((String) resetMinute.getSelectedItem() == "" ? "0" : (String) resetMinute.getSelectedItem()));
-	            resetDate.setSeconds(0);
-	            rc.setResetDate(resetDate);
-	         } else {
-	        	 rc.setResetDate(null);
-	         }
-	         
-	         Date acceptDate = (Date) datePicker2.getModel().getValue();
-	         if (acceptDate != null) {
-	            acceptDate.setHours(Integer.valueOf((String)startHour.getSelectedItem() == "" ? "0" : (String)startHour.getSelectedItem()));
-	            acceptDate.setMinutes(Integer.valueOf((String) startMinute.getSelectedItem() == "" ? "0" : (String) startMinute.getSelectedItem()));
-	            acceptDate.setSeconds(0);
-	            rc.setAcceptDate(acceptDate);
-	         } else {
-	        	 rc.setResetDate(null);
-	         }
-	         
-	         boolean isShuffle = shuffle.isSelected();
-	         rc.setShuffle(isShuffle);
-	         int openDeffer;
-	         
-	         int measure = options.getSelectedIndex();
-	         if (measure == 1) {
-	            measure = 0;
-	            int weekendInterval = weekBox.getSelectedIndex()+1;
-	            rc.setMeasure(measure);
-	            rc.setWeekendInterval(weekendInterval);
-	            if (!weekDelayField.getText().equals("")) {
-			        openDeffer = Integer.valueOf(weekDelayField.getText());
-			        rc.setOpenDeffer(openDeffer);
-			     } else {
-			        rc.setOpenDeffer(0);
-			     }
-	         }else if (measure == 2) {
-	            measure = 1;
-	            int weekNth = monthWeekBox.getSelectedIndex()+1;
-	            int day = dayBox.getSelectedIndex();
-	            rc.setWeekNth(weekNth);
-	            rc.setMeasure(measure);
-	            rc.setDay(day);
-	            if (!monthResetDelayField.getText().equals("")) {
-	 	           openDeffer = Integer.valueOf(monthResetDelayField.getText());
-	 	           rc.setOpenDeffer(openDeffer);
-	 	         } else {
-	 	        	rc.setOpenDeffer(0);
-	 	         }
-	         }else if (measure == 0) {
-	        	 measure = -1;
-	        	 rc.setMeasure(measure);
-	         }
-	         
-	         
-	         
-	         
-	         
-	         System.out.println(hc.patchOneRoom(rc));
-	         seatsPanel.setVisible(false);
-	         addSeats(currentRoomNumber);
-	         dispose();
-	         
-	      }
+	    	  
+	    	 if (e.getSource() == outRoomStBtn) {
+	    		 dispose();
+	    	 } else {
+	 	        RoomCreator rc = new RoomCreator();
+		         StringTokenizer colst = new StringTokenizer(colBlankField.getText(), ", ");
+		         StringTokenizer rowst = new StringTokenizer(rowBlankField.getText(), ", ");
+		         int[] colBlankArray = new int[colst.countTokens()];
+		         int[] rowBlankArray = new int[rowst.countTokens()];
+		         
+		         for (int i=0; i<colBlankArray.length; i++) {
+		            colBlankArray[i] = Integer.valueOf(colst.nextToken());
+		         }
+		         for (int i=0; i<rowBlankArray.length; i++) {
+		            rowBlankArray[i] = Integer.valueOf(rowst.nextToken());
+		         }
+		         
+		         int roomNum = Integer.valueOf(roomNumField.getText());
+		         int col = Integer.valueOf(colField.getText());
+		         int row = Integer.valueOf(rowField.getText());
+		         
+		         
+		         int[] colBlank = colBlankArray.length == 0 ? null : colBlankArray;
+		         int[] rowBlank = rowBlankArray.length == 0 ? null : rowBlankArray;
+		         rc.setRoomNum(roomNum);
+		         rc.setCol(col);
+		         rc.setRow(row);
+		         if (colBlank != null) {
+		            rc.setColBlank(colBlank);
+		         } else {
+		        	 rc.setColBlank(new int[0]);
+		         }
+		         if (rowBlank != null) {
+		            rc.setRowBlank(rowBlank);
+		         } else {
+		        	 rc.setRowBlank(new int[0]);
+		         }
+		         
+		         
+		         Date resetDate = (Date) datePicker.getModel().getValue();
+		         if (resetDate != null) {
+		            resetDate.setHours(Integer.valueOf((String) resetHour.getSelectedItem() == "" ? "0" : (String) resetHour.getSelectedItem()));
+		            resetDate.setMinutes(Integer.valueOf((String) resetMinute.getSelectedItem() == "" ? "0" : (String) resetMinute.getSelectedItem()));
+		            resetDate.setSeconds(0);
+		            rc.setResetDate(resetDate);
+		         } else {
+		        	 rc.setResetDate(null);
+		         }
+		         
+		         Date acceptDate = (Date) datePicker2.getModel().getValue();
+		         if (acceptDate != null) {
+		            acceptDate.setHours(Integer.valueOf((String)startHour.getSelectedItem() == "" ? "0" : (String)startHour.getSelectedItem()));
+		            acceptDate.setMinutes(Integer.valueOf((String) startMinute.getSelectedItem() == "" ? "0" : (String) startMinute.getSelectedItem()));
+		            acceptDate.setSeconds(0);
+		            rc.setAcceptDate(acceptDate);
+		         } else {
+		        	 rc.setResetDate(null);
+		         }
+		         
+		         boolean isShuffle = shuffle.isSelected();
+		         rc.setShuffle(isShuffle);
+		         int openDeffer;
+		         
+		         int measure = options.getSelectedIndex();
+		         if (measure == 1) {
+		            measure = 0;
+		            int weekendInterval = weekBox.getSelectedIndex()+1;
+		            rc.setMeasure(measure);
+		            rc.setWeekendInterval(weekendInterval);
+		            if (!weekDelayField.getText().equals("")) {
+				        openDeffer = Integer.valueOf(weekDelayField.getText());
+				        rc.setOpenDeffer(openDeffer);
+				     } else {
+				        rc.setOpenDeffer(0);
+				     }
+		         }else if (measure == 2) {
+		            measure = 1;
+		            int weekNth = monthWeekBox.getSelectedIndex()+1;
+		            int day = dayBox.getSelectedIndex();
+		            rc.setWeekNth(weekNth);
+		            rc.setMeasure(measure);
+		            rc.setDay(day);
+		            if (!monthResetDelayField.getText().equals("")) {
+		 	           openDeffer = Integer.valueOf(monthResetDelayField.getText());
+		 	           rc.setOpenDeffer(openDeffer);
+		 	         } else {
+		 	        	rc.setOpenDeffer(0);
+		 	         }
+		         }else if (measure == 0) {
+		        	 measure = -1;
+		        	 rc.setMeasure(measure);
+		         }
+		         
+		         
+		         
+		         
+		         
+		         System.out.println(hc.patchOneRoom(rc));
+		         seatsPanel.setVisible(false);
+		         addSeats(currentRoomNumber);
+		         dispose();
+		         
+		      }
+	    	 }
+
 	      
 	   }
 	
