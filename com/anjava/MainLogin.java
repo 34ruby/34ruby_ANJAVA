@@ -37,7 +37,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	AntialiasedLabel mainLogLabel, signUpPanelLabel;
 	JTextField ID, col, row, roomNum, colBlank, rowBlank, deleteNum, roomNumField, colField, rowField, colBlankField, rowBlankField;
 	JPasswordField PASSWORD;;
-	JButton aBtn, logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, makeRoomBtn, dBtn,editBtn, refresh ,sprefresh;
+	JButton aBtn, logInBtn, signUpBtn, backBtn2, signUpBtn2, exitButton, backBtn, mainBtn, logOutBtn, cRoom, dRoom, makeRoomBtn, dBtn,editBtn, refresh ,sprefresh, outBtn;
 	LoggedInPanel loggedInPanel;
 	Font Title = new Font(null);
 	ImageIcon icon;
@@ -292,6 +292,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				remove(roomHintLabel);
 				deleteLoggedInPanel();
 				hc.clearData();
 				if (seatsPanel != null) deleteSeats();
@@ -302,6 +303,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				refresh.setVisible(false);
 				addMainLogIn();
 				remove(roomPanelLabel);
+				
 				
 			}
 			
@@ -1306,7 +1308,8 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	      
 	      JLabel monthResetDelay = new JLabel("오픈지연(분)");
 	      monthResetDelay.setBounds(60,105,80,20);
-	      monthWeekBox = new JComboBox<>();
+	      monthWeekBox = new JComboBox<>();	      
+
 	      for(int i = 1; i <5 ; i++) monthWeekBox.addItem(String.valueOf(i));
 	      monthWeekBox.setRenderer(right);
 	      monthWeekBox.setBounds(70,27,80,20);
@@ -1315,6 +1318,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	      
 	      dayBox = new JComboBox<>();
 	      String[] days = {"일","월","화","수","목","금","토"};
+
 	      for(int i = 0; i < 7; i++) {         
 	         dayBox.addItem(days[i]);
 	      }
@@ -1568,38 +1572,59 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	         setSize(320, 150);
 	         
 	         JLabel number = new JLabel("강의실 호수");
-	         number.setBounds(30,30,100,25);
+	         number.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	         number.setBounds(30,50,100,25);
 	         
 	         deleteNum = new JTextField();
 	         deleteNum.setToolTipText("숫자로만 입력하세요.");
-	         deleteNum.setBounds(100,30,120,25);
+	         deleteNum.setBounds(100,50,190,25);
 	         
 	         dBtn = new JButton("방 지우기");
-	         dBtn.setBounds(150,70,89,20);
+	         dBtn.setBounds(40,100,100,20);
+	         dBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	         dBtn.setForeground(Color.BLACK);
+	         dBtn.setBackground(Color.LIGHT_GRAY);
 	         dBtn.addActionListener(this);
+	         dBtn.setBorderPainted(false);
+	         
+	         outBtn = new JButton("취소");
+	         outBtn.setBounds(180,100,100,20);
+	         outBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	         outBtn.setForeground(Color.BLACK);
+	         outBtn.setBackground(Color.LIGHT_GRAY);
+	         outBtn.addActionListener(this);
+	         outBtn.setBorderPainted(false);
 	         
 	         
 	         add(number);
 	         add(deleteNum);
 	         add(dBtn);
+	         add(outBtn);
 	         setLayout(null);
 	         setLocationRelativeTo(null);
+	         setUndecorated(true);
 	         setVisible(true);
 	      }
 	      
 	      @Override
 	      public void actionPerformed(ActionEvent e) {
 	         System.out.println(deleteNum.getText());
-	         if(deleteNum.getText().equals("")) {
-	            JOptionPane.showMessageDialog(null, "호수를 입력하세요.", "빈 내용", JOptionPane.WARNING_MESSAGE);
-	         }else {
-	            hc.deleteRoom(Integer.valueOf(deleteNum.getText()));
-	            JOptionPane.showMessageDialog(null, "강의실이 삭제되었습니다.", "삭제", JOptionPane.PLAIN_MESSAGE);
-//	            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    		loggedInPanel.setVisible(false);
-	            refreshLoggedInPanel();
-	            dispose();
+	         if (e.getSource() == outBtn) {
+	        	 dispose();
 	         }
+	         if (e.getSource() ==dBtn) {
+		         if(deleteNum.getText().equals("")) {
+			            JOptionPane.showMessageDialog(null, "호수를 입력하세요.", "빈 내용", JOptionPane.WARNING_MESSAGE);
+			         }else {
+			            hc.deleteRoom(Integer.valueOf(deleteNum.getText()));
+			            JOptionPane.showMessageDialog(null, "강의실이 삭제되었습니다.", "삭제", JOptionPane.PLAIN_MESSAGE);
+//			            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    		loggedInPanel.setVisible(false);
+			            refreshLoggedInPanel();
+			            dispose();
+			         } 
+	         }
+
 	         
 	      }
 	      
@@ -1610,39 +1635,61 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	      public GrantAdmin() {
 	         setSize(320, 150);
 	         
-	         JLabel number = new JLabel("userId");
-	         number.setBounds(30,30,100,25);
+	         JLabel number = new JLabel("User ID");
+	         number.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	         number.setBounds(30,50,100,25);
 	         
 	         deleteNum = new JTextField();
 	         deleteNum.setToolTipText("관리자 권한을 부여할 유저 ID를 입력하세요.");
-	         deleteNum.setBounds(100,30,120,25);
+         
+	         deleteNum.setBounds(100,50,190,25);
 	         
-	         dBtn = new JButton("권한 부여");
-	         dBtn.setBounds(150,70,89,20);
+	         dBtn = new JButton("권한부여");
+	         dBtn.setBounds(40,100,100,20);
+	         dBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	         dBtn.setForeground(Color.BLACK);
+	         dBtn.setBackground(Color.LIGHT_GRAY);
 	         dBtn.addActionListener(this);
+	         dBtn.setBorderPainted(false);
 	         
+	         outBtn = new JButton("취소");
+	         outBtn.setBounds(180,100,100,20);
+	         outBtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+	         outBtn.setForeground(Color.BLACK);
+	         outBtn.setBackground(Color.LIGHT_GRAY);
+	         outBtn.addActionListener(this);
+	         outBtn.setBorderPainted(false);
 	         
 	         add(number);
 	         add(deleteNum);
 	         add(dBtn);
+	         add(outBtn);
 	         setLayout(null);
 	         setLocationRelativeTo(null);
+	         setUndecorated(true);
 	         setVisible(true);
 	      }
 	      
 	      @Override
 	      public void actionPerformed(ActionEvent e) {
 	         System.out.println(deleteNum.getText());
-	         if(deleteNum.getText().equals("")) {
-	            JOptionPane.showMessageDialog(null, "아이디를 입력하세요", "빈 내용", JOptionPane.WARNING_MESSAGE);
-	         }else {
-	            System.out.println(hc.patchGrantAdmin(deleteNum.getText()));
-	            JOptionPane.showMessageDialog(null, "해당 유저에게 권한이 부여되었습니다.", "완료", JOptionPane.PLAIN_MESSAGE);
-//	            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    		loggedInPanel.setVisible(false);
-	            refreshLoggedInPanel();
-	            dispose();
+	         if (e.getSource() == outBtn) {
+	        	 dispose();
 	         }
+	         if (e.getSource() == dBtn) {
+		         if(deleteNum.getText().equals("")) {
+			            JOptionPane.showMessageDialog(null, "아이디를 입력하세요", "빈 내용", JOptionPane.WARNING_MESSAGE);
+			         }else {
+			            System.out.println(hc.patchGrantAdmin(deleteNum.getText()));
+			            JOptionPane.showMessageDialog(null, "해당 유저에게 권한이 부여되었습니다.", "완료", JOptionPane.PLAIN_MESSAGE);
+//			            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			    		loggedInPanel.setVisible(false);
+			            refreshLoggedInPanel();
+			            dispose();
+			         }
+ 
+	         }
+
 	         
 	      }
 	      

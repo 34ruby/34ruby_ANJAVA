@@ -254,7 +254,7 @@ class SeatsPanel extends JPanel {
 	          } else {
 	        	  if (isAdmin) {
 	        		  topLabel.setText(number+" 번 좌석을 예약 취소하시겠습니까?");
-		        	  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 12));
+		        	  topLabel.setFont(new Font("HY견고딕", Font.PLAIN, 11));
 		        	  
 			          yesbtn = new JButton("네");
 			          yesbtn.setFont(new Font("HY견고딕", Font.PLAIN, 12));
