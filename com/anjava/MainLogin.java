@@ -299,6 +299,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				remove(sprefresh);
 				remove(editBtn);
 				remove(roomHintLabel);
+				remove(selectHintLabel);
 				deleteLoggedInPanel();
 				hc.clearData();
 				if (seatsPanel != null) deleteSeats();
@@ -976,6 +977,23 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 //	    add(b1);
 //	    add(b2);
 //	    add(b3);
+		addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			    xDrag = e.getX();
+			    yDrag = e.getY();
+			    JFrame sFrame = (JFrame) e.getSource();
+			    sFrame.setLocation(sFrame.getLocation().x+xDrag-xPress, 
+			    sFrame.getLocation().y+yDrag-yPress);
+			 }
+			 @Override
+			 public void mouseMoved(MouseEvent e) {
+			     xPress = e.getX();
+			     yPress = e.getY();
+			  }
+			
+		});
 	      setLocationRelativeTo(null);
 	      setUndecorated(true);
 	      setVisible(true);
@@ -1501,7 +1519,23 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 	    	currentAcceptDate.setBounds(50,340,300,20);
 	    }
 	    
-	    
+		addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			    xDrag = e.getX();
+			    yDrag = e.getY();
+			    JFrame sFrame = (JFrame) e.getSource();
+			    sFrame.setLocation(sFrame.getLocation().x+xDrag-xPress, 
+			    sFrame.getLocation().y+yDrag-yPress);
+			 }
+			 @Override
+			 public void mouseMoved(MouseEvent e) {
+			     xPress = e.getX();
+			     yPress = e.getY();
+			  }
+			
+		});
 	      setLocationRelativeTo(null);
 	      setUndecorated(true);
 	      setVisible(true);
