@@ -296,10 +296,13 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				remove(sprefresh);
-				remove(editBtn);
-				remove(roomHintLabel);
-				remove(selectHintLabel);
+//				remove(sprefresh);
+//				remove(editBtn);
+//				remove(roomHintLabel);
+//				remove(selectHintLabel);
+				editBtn.setVisible(false);
+				roomHintLabel.setVisible(false);
+				selectHintLabel.setVisible(false);
 				deleteLoggedInPanel();
 				hc.clearData();
 				if (seatsPanel != null) deleteSeats();
@@ -307,6 +310,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 				welcome.setVisible(false);
 				if(cRoomPanel != null)
 				cRoomPanel.setVisible(false);
+				sprefresh.setVisible(false);
 				refresh.setVisible(false);
 				addMainLogIn();
 				remove(roomPanelLabel);
@@ -560,6 +564,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 						if (hc.isAdmin()) {
 							editBtn.setVisible(true);
 						}
+//						sprefresh.setVisible(true);
 						loggedInPanel.setVisible(false);
 						addSeats(roomNum);
 						deleteAdminBtn();
@@ -576,7 +581,7 @@ public class MainLogin extends JFrame implements ActionListener, KeyListener{
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							JOptionPane.showMessageDialog(null, "아직 예약할 수 없습니다.", "Message", JOptionPane.ERROR_MESSAGE);
-							
+							sprefresh.setVisible(true);
 						}
 						
 					});
