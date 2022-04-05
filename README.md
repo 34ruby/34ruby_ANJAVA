@@ -6,6 +6,10 @@
 関した学生たちの不満を解消する
 座席予約プログラム。
 </p>
-![그림1](https://user-images.githubusercontent.com/76924629/161662706-dd59cd5a-7329-4323-b82f-578a5aba22b8.jpg)
-![그림2](https://user-images.githubusercontent.com/76924629/161662713-50f48733-7a4a-4c6e-88db-c493ebb2beb7.png)
-![그림3](https://user-images.githubusercontent.com/76924629/161662719-ef353c97-de62-417a-aa18-7074688a501a.png)
+<hr>
+<h3>login Page</h3>
+<img src="https://user-images.githubusercontent.com/76924629/161662706-dd59cd5a-7329-4323-b82f-578a5aba22b8.jpg"/>
+<h3>lobby Page</h3>
+<img src="https://user-images.githubusercontent.com/76924629/161663122-4ac1932e-3548-4a83-9b55-761f8e986580.png"/>
+<h3>room setting modal</h3>
+<img src="https://user-images.githubusercontent.com/76924629/161662719-ef353c97-de62-417a-aa18-7074688a501a.png"/>
